@@ -2,6 +2,7 @@ import subprocess
 import time
 import os
 import re
+import urllib
 from datetime import datetime, timedelta
 import psutil
 import json
@@ -13,7 +14,7 @@ import zipfile
 import requests
 import schedule
 import tkinter as tk
-import urllib.request as server_ipCheck
+import urllib.request as server_ipcheck
 from tkinter import ttk
 from tkinter import filedialog
 from tkinter import messagebox
@@ -150,13 +151,9 @@ def server_status_info():
                             version_pattern = re.compile(r'Welcome to Pal Server\[v([\d.]+)\]')
                             match = version_pattern.search(output_lines[1])
 
-                            #Check Public IP address
-                            server_ipCheck = urllib.request.urlopen('https://ident.me').read().decode('utf8')
-
                             if match:
                                 server_version = match.group(1)
                                 server_version_state_label.config(text=server_version)
-                                server_version_state_label.config(text=server_ipCheck)
                                 server_status_state_label.config(text="Online", foreground="green")
                                 root.after(60000, server_status_info)
                             else:
@@ -556,12 +553,19 @@ def send_discord_message():
     except requests.exceptions.RequestException as e:
         append_to_output(f"Error sending Discord alert: {e}")
 
+def monitor_ip():
+    # Check Public IP address
+    ip_response = requests.get('https://api.ipify.org').text
+    server_ip_state_label.config(text=ip_response, foreground="black")
+    root.after(12000,monitor_ip)
+
 def monitor_server(monitorinterval):
     global monitor_after_id
     task_name = "PalServer-Win64-Test-Cmd.exe"
 
     # Get the list of running processes
     running_processes = [proc.name() for proc in psutil.process_iter()]
+
 
     # Check if the process is in the list
     if task_name in running_processes:
@@ -1415,8 +1419,11 @@ server_version_label.grid(column=0, row=1, sticky=tk.W)
 server_version_state_label = ttk.Label(server_info_frame, text="-")
 server_version_state_label.grid(column=1, row=1)
 # Check Public IP Address
-server_version_label = ttk.Label(server_info_frame, text="Server Public IP:")
-server_version_label.grid(column=0, row=1, sticky=tk.W)
+server_ip_label = ttk.Label(server_info_frame, text="External IP:")
+server_ip_label.grid(column=0, row=2, sticky=tk.W)
+#Public IP Dispaly
+server_ip_state_label = ttk.Label(server_info_frame, text="-")
+server_ip_state_label.grid(column=1, row=2)
 
 server_version_state_label = ttk.Label(server_info_frame, text="-")
 server_version_state_label.grid(column=1, row=1)
@@ -1635,5 +1642,5 @@ get_server_info(server_directory_selection.cget("text"))
 server_status_info()
 
 root.protocol("WM_DELETE_WINDOW", on_exit)
-
+monitor_ip()
 root.mainloop()
