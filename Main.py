@@ -13,9 +13,11 @@ import zipfile
 import requests
 import schedule
 import tkinter as tk
+import urllib.request as server_ipCheck
 from tkinter import ttk
 from tkinter import filedialog
 from tkinter import messagebox
+
 
 SETTINGS_FILE = os.path.join(os.path.expanduser("~"), "Documents/Palworld Server Manager", "settings.json")
 
@@ -148,9 +150,13 @@ def server_status_info():
                             version_pattern = re.compile(r'Welcome to Pal Server\[v([\d.]+)\]')
                             match = version_pattern.search(output_lines[1])
 
+                            #Check Public IP address
+                            server_ipCheck = urllib.request.urlopen('https://ident.me').read().decode('utf8')
+
                             if match:
                                 server_version = match.group(1)
                                 server_version_state_label.config(text=server_version)
+                                server_version_state_label.config(text=server_ipCheck)
                                 server_status_state_label.config(text="Online", foreground="green")
                                 root.after(60000, server_status_info)
                             else:
@@ -1404,6 +1410,12 @@ server_status_state_label = ttk.Label(server_info_frame, text="-")
 server_status_state_label.grid(column=1, row=0)
 
 server_version_label = ttk.Label(server_info_frame, text="Server Version:")
+server_version_label.grid(column=0, row=1, sticky=tk.W)
+
+server_version_state_label = ttk.Label(server_info_frame, text="-")
+server_version_state_label.grid(column=1, row=1)
+# Check Public IP Address
+server_version_label = ttk.Label(server_info_frame, text="Server Public IP:")
 server_version_label.grid(column=0, row=1, sticky=tk.W)
 
 server_version_state_label = ttk.Label(server_info_frame, text="-")
