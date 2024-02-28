@@ -93,6 +93,9 @@ force_shutdown_server_command = None
 #define variables used in functions
 send_email_checked = False
 discord_message_checked = False
+check_old_ip = False
+check_new_ip = False
+old_server_ip = '127.0.0.1'
 update_server_on_startup = False
 enable_backups = False
 start_server_clicked = False
@@ -544,7 +547,6 @@ def send_discord_message():
     webhook_url = discordEntry.get()
     message = 'This message indicates that the Palworld server was not running. No worries though, the server was restarted and is back online. Beep beep boop.'
     payload = {"content": message}
-
     try:
         response = requests.post(webhook_url, json=payload)
         response.raise_for_status()  # Check for HTTP errors
@@ -553,10 +555,34 @@ def send_discord_message():
     except requests.exceptions.RequestException as e:
         append_to_output(f"Error sending Discord alert: {e}")
 
+def send_ip_check(new_server_ip):
+    global old_server_ip
+    if new_server_ip == old_server_ip:
+        return
+
+    old_server_ip = new_server_ip
+    webhook_url = discordEntry.get()
+    message = 'Sever IP has been updated! New IP ' + new_server_ip
+
+    payload = {"content": message}
+    try:
+        response = requests.post(webhook_url, json=payload)
+        response.raise_for_status()  # Check for HTTP errors
+
+        append_to_output("Discord alert was sent, IP Change")
+    except requests.exceptions.RequestException as e:
+        append_to_output(f"Error sending Discord alert: {e}")
+##Button Command
+# #def x():
+#     send_ip_check('127.0.0.1')
+#     monitor_ip()
+
+
 def monitor_ip():
     # Check Public IP address
     ip_response = requests.get('https://api.ipify.org').text
     server_ip_state_label.config(text=ip_response, foreground="black")
+    send_ip_check(ip_response)
     root.after(12000,monitor_ip)
 
 def monitor_server(monitorinterval):
@@ -1268,7 +1294,6 @@ def functions_go_button_click():
         validate_palworld_server()
     elif selected_function == "Backup Server":
         backup_server()
-
 def validate_time_input(time):
     # Validate the input format (HH:MM)
     if len(time) == 0:
@@ -1288,9 +1313,10 @@ def validate_time_input(time):
 root = tk.Tk()
 root.title("Palworld Dedicated Server Manager")
 try:
-    root.iconbitmap('palworld_logo.ico')
+    bundle_dir=os.path.abspath(os.path.dirname(__file__))
+    root.iconbitmap(os.path.join(bundle_dir, 'palworld_logo.ico'))
 except Exception as e:
-    append_to_output("Icon wasn't able to load due to error: " + str(e))
+    append_to_output("Icon wasn't able to load due to error: "+str(e))
 
 tabControl = ttk.Notebook(root)
 
