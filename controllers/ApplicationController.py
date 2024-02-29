@@ -11,7 +11,7 @@ class ApplicationController:
         self.model: ApplicationModel = ApplicationModel(self)
         self.view: ApplicationView = ApplicationView(self)
         # sub-controllers, each handles their own view & model; only controllers communicate directly through layer
-        self.main_controller: MainController = MainController(self, self.view.tab_control)
+        self.main_controller: MainController = MainController(self)
         self.server_config_controller = None
         self.alerts_config_controller = None
         self.about_controller = None
@@ -33,3 +33,6 @@ class ApplicationController:
 
     def get_about_controller(self) -> AboutController:
         return self.about_controller
+
+    def get_tab_control(self):
+        return self.view.tab_control
