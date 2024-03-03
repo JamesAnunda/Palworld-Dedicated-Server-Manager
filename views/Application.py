@@ -12,6 +12,7 @@ class Application(tk.Tk):
     alerts_config = None
     server_config = None
     about = None
+    output_console = None
 
     def __init__(self):
         super().__init__()
@@ -24,24 +25,31 @@ class Application(tk.Tk):
         self.tab_control: ttk.Notebook = ttk.Notebook(self)
         self.title("Palworld Dedicated Server Manager")
         self.tab_control.pack(expand=1, fill="both")
-        # self.protocol("WM_DELETE_WINDOW", self.on_exit)
+        self.protocol("WM_DELETE_WINDOW", self.on_exit)
 
     def create_subcomponents(self):
         self.main_config = MainConfig.MainConfig(self)
         self.alerts_config = None  # todo
         self.server_config = None
         self.about = None
+        self.output_console = None
 
-    def on_exit(self):
+    def save(self):
+        """
+        Top-level save, does not return anything. Is not inherited. Just... is.
+
+        Gathers and writes the settings of all subordinate elements to the file
+        """
         settings_directory = os.path.join(os.path.expanduser("~"), "Documents/Palworld Server Manager")
         if not os.path.exists(settings_directory):
             os.makedirs(settings_directory)
 
-        main_settings = self.main_config.save()
-        settings = main_settings
-
+        settings = self.main_config.save()  #| self.alerts_config.save() | self.server_config.save() | self.about.save()
         with open(self.settings_file, "w") as file:
             json.dump(settings, file)
+
+    def on_exit(self):
+        self.save()
         self.destroy()
 
     def load_settings(self):
