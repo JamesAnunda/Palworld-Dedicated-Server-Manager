@@ -28,3 +28,6 @@ class SaveSettings:
 
     server_start_args = "server_start_args"
     server_start_args_default = "-useperfthreads -NoAsyncLoadingThread -UseMultithreadForDS -EpicApp=PalServer"
+
+    external_ip = "external_ip"
+    external_ip_default = "127.0.0.1"

@@ -28,11 +28,12 @@ class MainConfig(TkViewElements.TkTab, ISavable, IRestorable):
         self.server_functions = ServerFunctions.ServerFunctions(self)
 
     def save(self) -> dict:
-        return self.interval_config.save() | self.optional_config.save()
+        return self.interval_config.save() | self.optional_config.save() | self.server_info.save()
 
     def restore(self, restore_data: dict) -> None:
         self.interval_config.restore(restore_data)
         self.optional_config.restore(restore_data)
+        self.server_info.restore(restore_data)
         self.server_info.update_server_info()
 
     def append_output(self, message):
