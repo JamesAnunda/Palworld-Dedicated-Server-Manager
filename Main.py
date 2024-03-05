@@ -89,6 +89,8 @@ update_palworld_server_command = None
 update_palworld_then_start_server_command = None
 shutdown_server_command = None
 force_shutdown_server_command = None
+is_server_online = None
+is_server_offline = None
 
 #define variables used in functions
 send_email_checked = False
@@ -546,7 +548,13 @@ def send_email():
 def test_send_discord_message():
     webhook_url = discordEntry.get()
     message = 'This message indicates that the Palworld server was not running. No worries though, the server was restarted and is back online. Beep beep boop.'
+    messagepayload = {"content": message}
+    requests.post(webhook_url, json=messagepayload)
+def discord_error_handle():
+    webhook_url = discordEntry.get()
+    message = "Something is wrong with discord bot! Ping @equinox2248"
     payload = {"content": message}
+    append_to_output('Something went wrong with discord bot')
     try:
         response = requests.post(webhook_url, json=payload)
         response.raise_for_status()  # Check for HTTP errors
@@ -554,6 +562,26 @@ def test_send_discord_message():
         append_to_output("Discord alert was sent")
     except requests.exceptions.RequestException as e:
         append_to_output(f"Error sending Discord alert: {e}")
+
+
+def send_discord_message():
+    if is_server_online == server_check():
+        message = "Server is booting up and is up and running! Ping @devs or @owners for any issues! Or pop in to any VC if you see one of us lol!"
+        webhook_url = discordEntry.get()
+        payload = {"content": message}
+        try:
+            response = requests.post(webhook_url, json=payload)
+            response.raise_for_status()  # Check for HTTP errors
+
+            append_to_output("Discord alert was sent")
+        except requests.exceptions.RequestException as e:
+            append_to_output(f"Error sending Discord alert: {e}")
+    else:
+        if is_server_offline == server_check():
+            webhook_url = discordEntry.get()
+            message = "Server is down! Ping @devs or @owners for assitance!"
+            payload = {"content": message}
+
 
 def send_ip_check(new_server_ip):
     global old_server_ip
@@ -939,7 +967,7 @@ def backup_server():
         append_to_output("You must select a valid Palworld Server Directory to use this function. Check your Server Config tab")
         messagebox.showinfo("Invalid Directory", "You must select a valid Palworld Server directory to use this function")
 
-def start_server():
+def start_server(send_discord_message):
     server_check_results = server_check()
     if server_check_results == "check good":
         update_commands_results = update_commands()
@@ -956,11 +984,13 @@ def start_server():
                 if update_server_startup_checkbox_var.get():
                     results = update_palworld_server()
                     if results == "server updated":
+                        send_discord_message()
                         append_to_output("Starting server...")
                         try:
                             subprocess.Popen(start_server_command)
                         except Exception as e:
                             append_to_output("There was an issue starting the server due to error: " + str(e))
+                            send_discord_message(is_server_offline)
                         root.after(3000, check_palworld_process)
                     elif results == "server not updated":
                         append_to_output("Starting server...")
@@ -1427,7 +1457,6 @@ functions_combobox.set("-SELECT-")
 
 functions_go_button = ttk.Button(server_functions_frame, text="Run", command=functions_go_button_click)
 functions_go_button.grid(column=1, row=0)
-
 ###################### Server Information ###################################################
 
 server_info_frame = tk.LabelFrame(mainTab, text="Server Information")
