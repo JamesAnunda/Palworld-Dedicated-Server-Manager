@@ -39,7 +39,7 @@ class ServerConfigs(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         row += 1
         self.server_start_args = tk.StringVar(value=SaveSettings.server_start_args_default)
         ttk.Label(self, text="Server Startup Args: ").grid(column=0, row=row, sticky=tk.N)
-        ttk.Entry(self, textvariable=self.server_start_args, width=100).grid(column=1, row=row, columnspan=2, sticky=tk.NSEW)
+        ttk.Entry(self, textvariable=self.server_start_args, width=100).grid(column=1, row=row, columnspan=2, sticky=tk.W)
 
     def save(self) -> dict:
         return {
@@ -58,7 +58,7 @@ class ServerConfigs(TkViewElements.TkLabelFrame, ISavable, IRestorable):
 
     def create_dir_search(self, btn_txt, dir_var, command, row):
         ttk.Button(self, text=btn_txt, command=command, width=30).grid(column=0, row=row, sticky=tk.W, padx=10, pady=10)
-        ttk.Label(self, textvariable=dir_var, width=75).grid(column=1, row=row, sticky=tk.W, padx=10, pady=10)
+        ttk.Label(self, textvariable=dir_var).grid(column=1, row=row, sticky=tk.W, padx=10, pady=10)
 
     def update_statuses(self):
         pass
