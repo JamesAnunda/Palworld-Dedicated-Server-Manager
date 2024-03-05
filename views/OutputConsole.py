@@ -22,7 +22,8 @@ class OutputConsole(tk.Frame):
         scrollbar.config(command=self.output_text.yview)
 
     def append_output(self, message):
-        timestamp = datetime.now().strftime("[%Y-%m-%d %H:%M:%S] ")
-        formatted_message = timestamp+message
-        self.output_text.insert(tk.END, formatted_message+"\n")
+        message_time = datetime.now().astimezone()
+        timezone = message_time.tzname().split(" ")
+        tz_short = "] " if type(timezone) is not list else " "+timezone[0]+"/"+timezone[1][0]+timezone[2][0]+timezone[3][0]+"] "
+        self.output_text.insert(tk.END, message_time.strftime("[%Y-%m-%d %H:%M:%S")+tz_short+message+"\n")
         self.output_text.yview(tk.END)  # Auto-scroll to the bottom

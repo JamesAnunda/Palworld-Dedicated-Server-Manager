@@ -18,3 +18,6 @@ class ServerFunctions(TkViewElements.TkLabelFrame):
 
     def execute_function(self):
         pass
+
+    def append_output(self, message):
+        self.main_config.append_output(message)

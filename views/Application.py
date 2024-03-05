@@ -18,6 +18,9 @@ class Application(tk.Tk):
 
     def __init__(self):
         super().__init__()
+        settings_directory = os.path.join(os.path.expanduser("~"), "Documents/Palworld Server Manager")
+        if not os.path.exists(settings_directory):
+            os.makedirs(settings_directory)
         self.settings_file = os.path.join(os.path.expanduser("~"), "Documents/Palworld Server Manager", "settings.json")
         self.initial_setup()
         self.create_subcomponents()
@@ -38,14 +41,8 @@ class Application(tk.Tk):
 
     def save(self):
         """
-        Top-level save, does not return anything. Is not inherited. Just... is.
-
         Gathers and writes the settings of all subordinate elements to the file
         """
-        settings_directory = os.path.join(os.path.expanduser("~"), "Documents/Palworld Server Manager")
-        if not os.path.exists(settings_directory):
-            os.makedirs(settings_directory)
-
         settings = self.main_config.save() | self.startup_config.save()  #| self.alerts_config.save() | self.about.save()
         with open(self.settings_file, "w") as file:
             json.dump(settings, file)
@@ -73,6 +70,9 @@ class Application(tk.Tk):
 
     def get_tab_control(self):
         return self.tab_control
+
+    def append_output(self, message):
+        self.output_console.append_output(message)
 
 
 if __name__ == "__main__":

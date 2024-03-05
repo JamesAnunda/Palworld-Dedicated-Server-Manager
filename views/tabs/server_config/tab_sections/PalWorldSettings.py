@@ -35,6 +35,9 @@ class PalWorldSettings(TkViewElements.TkLabelFrame, IRestorable):
     def restore(self, restore_data: dict) -> None:
         self.update_settings()
 
+    def append_output(self, message):
+        self.startup_configs.append_output(message)
+
     def create_setting_view(self, label_text, var, column, row):
         ttk.Label(self, text=label_text).grid(column=column, row=row, padx=10, sticky=tk.W)
         ttk.Label(self, textvariable=var).grid(column=column, row=row+1, padx=10, sticky=tk.W)

@@ -80,6 +80,9 @@ class IntervalConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         self.monitor_interval_minutes.set(restore_data.get(SaveSettings.monitor_interval_minutes, SaveSettings.monitor_interval_minutes_default))
         self.backup_interval_hours.set(restore_data.get(SaveSettings.backup_interval_hours, SaveSettings.backup_interval_hours_default))
 
+    def append_output(self, message):
+        self.main_config.append_output(message)
+
     def get_time(self, button: tk.Button):
         (hours, minutes, period) = self.daily_restart_time.get().replace(":", " ").split(' ')
 

@@ -30,3 +30,6 @@ class StartupConfigs(TkViewElements.TkTab, ISavable, IRestorable):
     def restore(self, restore_data: dict) -> None:
         self.world_settings.restore(restore_data)
         self.server_configs.restore(restore_data)
+
+    def append_output(self, message):
+        self.application.append_output(message)

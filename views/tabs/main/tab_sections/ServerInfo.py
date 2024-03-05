@@ -53,3 +53,6 @@ class ServerInfo(TkViewElements.TkLabelFrame):
         self.update_server_status_label()
         self.update_server_status()
         self.update_server_version()
+
+    def append_output(self, message):
+        self.main_config.append_output(message)

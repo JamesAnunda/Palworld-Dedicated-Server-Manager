@@ -36,3 +36,6 @@ class MainConfig(TkViewElements.TkTab, ISavable, IRestorable):
         self.interval_config.restore(restore_data)
         self.optional_config.restore(restore_data)
         self.server_info.update_server_info()
+
+    def append_output(self, message):
+        self.application.append_output(message)

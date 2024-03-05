@@ -56,6 +56,9 @@ class ServerConfigs(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         self.steamcmd_dir_str.set(restore_data.get(SaveSettings.steamcmd_directory, SaveSettings.steamcmd_directory_default))
         self.backup_dir_str.set(restore_data.get(SaveSettings.backup_directory, SaveSettings.backup_directory_default))
 
+    def append_output(self, message):
+        self.startup_configs.append_output(message)
+
     def create_dir_search(self, btn_txt, dir_var, command, row):
         ttk.Button(self, text=btn_txt, command=command, width=30).grid(column=0, row=row, sticky=tk.W, padx=10, pady=10)
         ttk.Label(self, textvariable=dir_var).grid(column=1, row=row, sticky=tk.W, padx=10, pady=10)
