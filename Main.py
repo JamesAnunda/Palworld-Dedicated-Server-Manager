@@ -543,7 +543,7 @@ def send_email():
         # Disconnect from the SMTP server
         server.quit()
 
-def send_discord_message():
+def test_send_discord_message():
     webhook_url = discordEntry.get()
     message = 'This message indicates that the Palworld server was not running. No worries though, the server was restarted and is back online. Beep beep boop.'
     payload = {"content": message}
@@ -610,7 +610,7 @@ def monitor_server(monitorinterval):
                 if send_email_checked == True:
                     send_email()
                 if discord_message_checked == True:
-                    send_discord_message()
+                    test_send_discord_message()
                 monitor_after_id = root.after(monitorinterval, lambda: monitor_server(monitorinterval))
             elif results == "server not updated":
                 append_to_output("Starting server...")
@@ -621,7 +621,7 @@ def monitor_server(monitorinterval):
                 if send_email_checked == True:
                     send_email()
                 if discord_message_checked == True:
-                    send_discord_message()
+                    test_send_discord_message()
                 monitor_after_id = root.after(monitorinterval, lambda: monitor_server(monitorinterval))
         else:
             append_to_output("Starting server...")
@@ -632,7 +632,7 @@ def monitor_server(monitorinterval):
             if send_email_checked == True:
                 send_email()
             if discord_message_checked == True:
-                send_discord_message()
+                test_send_discord_message()
             monitor_after_id = root.after(monitorinterval, lambda: monitor_server(monitorinterval))
 
 def enable_monitor_server():
@@ -1598,7 +1598,7 @@ discordLabel.grid(column=0, row=0, padx=10)
 discordEntry = ttk.Entry(discord_frame, width=35)
 discordEntry.grid(column=1, row=0)
 
-discordTestButton = ttk.Button(discord_frame, text="Send Test Message", command=send_discord_message)
+discordTestButton = ttk.Button(discord_frame, text="Send Test Message", command=test_send_discord_message)
 discordTestButton.grid(column=0, row=1, columnspan=2, pady=2)
 
 ###################### About Tab ###################################################
