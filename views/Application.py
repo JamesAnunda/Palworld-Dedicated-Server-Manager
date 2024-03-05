@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import ttk
 
 from views import OutputConsole
+from views.tabs.about import About
 from views.tabs.main import MainConfig
 from views.tabs.server_config import StartupConfigs
 
@@ -13,17 +14,22 @@ class Application(tk.Tk):
     main_config: MainConfig = None
     alerts_config = None
     startup_config: StartupConfigs = None
-    about = None
+    about: About = None
     output_console: OutputConsole = None
 
-    def __init__(self):
+    def __init__(self, root_path):
         super().__init__()
+        self.root_path = root_path
         settings_directory = os.path.join(os.path.expanduser("~"), "Documents/Palworld Server Manager")
         if not os.path.exists(settings_directory):
             os.makedirs(settings_directory)
         self.settings_file = os.path.join(os.path.expanduser("~"), "Documents/Palworld Server Manager", "settings.json")
         self.initial_setup()
         self.create_subcomponents()
+        try:
+            self.iconbitmap(os.path.join(self.root_path, 'palworld_logo.ico'))
+        except Exception as e:
+            self.append_output("Icon wasn't able to load due to error: "+str(e))
         self.load_settings()
 
     def initial_setup(self):
@@ -36,7 +42,7 @@ class Application(tk.Tk):
         self.main_config = MainConfig.MainConfig(self)
         self.alerts_config = None  # todo
         self.startup_config = StartupConfigs.StartupConfigs(self)
-        self.about = None  # todo
+        self.about = About.About(self)
         self.output_console = OutputConsole.OutputConsole(self)
 
     def save(self):
@@ -73,8 +79,3 @@ class Application(tk.Tk):
 
     def append_output(self, message):
         self.output_console.append_output(message)
-
-
-if __name__ == "__main__":
-    app = Application()
-    app.mainloop()

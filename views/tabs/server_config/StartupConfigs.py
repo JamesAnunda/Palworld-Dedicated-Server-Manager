@@ -14,8 +14,8 @@ class StartupConfigs(TkViewElements.TkTab, ISavable, IRestorable):
     world_settings: PalWorldSettings = None
     server_configs: ServerConfigs = None
 
-    def __init__(self, application: 'Application.Application', tab_name: str = "Startup Configs", index: int = 1):
-        super().__init__(application.get_tab_control(), tab_name, index)
+    def __init__(self, application: 'Application.Application', tab_name: str = "Startup Configs"):
+        super().__init__(application.get_tab_control(), tab_name)
         self.application: Application = application
         self.columnconfigure(0, weight=1)
         self.create_subcomponents()

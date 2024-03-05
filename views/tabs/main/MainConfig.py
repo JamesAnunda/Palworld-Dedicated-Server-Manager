@@ -16,11 +16,9 @@ class MainConfig(TkViewElements.TkTab, ISavable, IRestorable):
     server_info: ServerInfo = None
     server_functions: ServerFunctions = None
 
-    def __init__(self, application: 'Application.Application', tab_name: str = "Main", index: int = 0):
-        super().__init__(application.get_tab_control(), tab_name, index)
+    def __init__(self, application: 'Application.Application', tab_name: str = "Main"):
+        super().__init__(application.get_tab_control(), tab_name, index=[0, 1])
         self.application: Application = application
-        self.columnconfigure(0, weight=1)
-        self.columnconfigure(1, weight=1)
         self.create_subcomponents()
 
     def create_subcomponents(self):
