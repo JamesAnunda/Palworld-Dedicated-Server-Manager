@@ -13,3 +13,18 @@ class SaveSettings:
 
     delete_old_backups_days = "delete_old_backups_days"
     delete_old_backups_days_default = 1
+
+    palworld_directory = "palworld_directory"
+    palworld_directory_default = "No Directory Selected"
+
+    arrcon_directory = "arrcon_directory"
+    arrcon_directory_default = "No Directory Selected"
+
+    steamcmd_directory = "steamcmd_directory"
+    steamcmd_directory_default = "No Directory Selected"
+
+    backup_directory = "backup_directory"
+    backup_directory_default = ""
+
+    server_start_args = "server_start_args"
+    server_start_args_default = "-useperfthreads -NoAsyncLoadingThread -UseMultithreadForDS -EpicApp=PalServer"

@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import ttk
 
 from views.tabs.main import MainConfig
+from views.tabs.server_config import StartupConfigs
 
 
 class Application(tk.Tk):
@@ -30,7 +31,7 @@ class Application(tk.Tk):
     def create_subcomponents(self):
         self.main_config = MainConfig.MainConfig(self)
         self.alerts_config = None  # todo
-        self.server_config = None
+        self.server_config = StartupConfigs.StartupConfigs(self)
         self.about = None
         self.output_console = None
 
@@ -44,7 +45,7 @@ class Application(tk.Tk):
         if not os.path.exists(settings_directory):
             os.makedirs(settings_directory)
 
-        settings = self.main_config.save()  #| self.alerts_config.save() | self.server_config.save() | self.about.save()
+        settings = self.main_config.save() | self.server_config.save()  #| self.alerts_config.save() | self.about.save()
         with open(self.settings_file, "w") as file:
             json.dump(settings, file)
 
@@ -57,6 +58,7 @@ class Application(tk.Tk):
             with open(self.settings_file, "r") as file:
                 settings = json.load(file)
                 self.main_config.restore(settings)
+                self.server_config.restore(settings)
         except FileNotFoundError:
             pass
             # append_to_output("First time startup. Applying default configuration")

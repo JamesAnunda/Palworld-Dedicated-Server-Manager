@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 
-from views.tabs import TkViewElements
+from utilities import TkViewElements
 from views.tabs.main import MainConfig
 
 

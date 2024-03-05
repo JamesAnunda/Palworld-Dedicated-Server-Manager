@@ -1,10 +1,11 @@
 import tkinter as tk
 from tkinter import ttk
 
+from utilities import TkViewElements
 from utilities.Constants import SaveSettings
 from utilities.StateInterfaces import IRestorable, ISavable
+from utilities.Utilities import get_or_default
 from utilities.ValidationMethods import numeric_validate
-from views.tabs import TkViewElements
 from views.tabs.main import MainConfig
 
 
@@ -55,7 +56,7 @@ class OptionalConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
 
     def save(self) -> dict:
         return {
-                SaveSettings.delete_old_backups_days: self.delete_old_backups_days.get() if self.delete_old_backups_days.get() != "" else SaveSettings.delete_old_backups_days_default
+                SaveSettings.delete_old_backups_days: get_or_default(self.delete_old_backups_days.get(), SaveSettings.delete_old_backups_days_default),
         }
 
     def restore(self, restore_data: dict) -> None:

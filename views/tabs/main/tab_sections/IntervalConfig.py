@@ -3,10 +3,11 @@ from tkinter import ttk
 
 from tktimepicker import constants, SpinTimePickerModern
 
+from utilities import TkViewElements
 from utilities.Constants import SaveSettings
 from utilities.StateInterfaces import IRestorable, ISavable
+from utilities.Utilities import get_or_default
 from utilities.ValidationMethods import hours_validate, minutes_validate
-from views.tabs import TkViewElements
 from views.tabs.main import MainConfig
 
 
@@ -38,7 +39,7 @@ class IntervalConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
 
         # restart at a given time input
         self.daily_restart_bool = tk.BooleanVar(value=False)
-        self.daily_restart_time = tk.StringVar(value="12:00 AM")
+        self.daily_restart_time = tk.StringVar(value=SaveSettings.daily_restart_time_default)
         ttk.Checkbutton(self, variable=self.daily_restart_bool, command=None).grid(column=0, row=row, sticky=tk.W)  # todo enable_scheduled_restart
         ttk.Label(self, text="Daily Server Restart Time (12-hour Format):").grid(column=1, row=row, sticky=tk.W)
         ttk.Label(self, textvariable=self.daily_restart_time).grid(column=2, row=row, sticky=tk.W)
@@ -57,27 +58,27 @@ class IntervalConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         row += 1
 
         # backup every X hours
-        self.backup_server_interval_bool = tk.BooleanVar(value=False)
-        self.backup_server_interval_hours = tk.StringVar()
-        ttk.Checkbutton(self, variable=self.backup_server_interval_bool, command=None).grid(column=0, row=row, sticky=tk.W)  # todo enable_backup_interval
+        self.backup_interval_bool = tk.BooleanVar(value=False)
+        self.backup_interval_hours = tk.StringVar()
+        ttk.Checkbutton(self, variable=self.backup_interval_bool, command=None).grid(column=0, row=row, sticky=tk.W)  # todo enable_backup_interval
         ttk.Label(self, text="Backup Server Interval (hours):").grid(column=1, row=row, sticky=tk.W)
-        ttk.Entry(self, textvariable=self.backup_server_interval_hours, width=3, validate="key", validatecommand=hours_validation).grid(column=2, row=row, sticky=tk.W)
+        ttk.Entry(self, textvariable=self.backup_interval_hours, width=3, validate="key", validatecommand=hours_validation).grid(column=2, row=row, sticky=tk.W)
 
         row += 1
 
     def save(self) -> dict:
         return {
-                SaveSettings.interval_restart_hours:   self.interval_restart_hours.get() if self.interval_restart_hours.get() != "" else SaveSettings.interval_restart_hours_default,
-                SaveSettings.daily_restart_time:       self.daily_restart_time.get() if self.daily_restart_time.get() != "" else SaveSettings.daily_restart_time_default,
-                SaveSettings.monitor_interval_minutes: self.monitor_interval_minutes.get() if self.monitor_interval_minutes.get() != "" else SaveSettings.monitor_interval_minutes_default,
-                SaveSettings.backup_interval_hours:    self.backup_server_interval_hours.get() if self.backup_server_interval_hours.get() != "" else SaveSettings.backup_interval_hours_default
+                SaveSettings.interval_restart_hours:   get_or_default(self.interval_restart_hours.get(), SaveSettings.interval_restart_hours_default),
+                SaveSettings.daily_restart_time:       get_or_default(self.daily_restart_time.get(), SaveSettings.daily_restart_time_default),
+                SaveSettings.monitor_interval_minutes: get_or_default(self.monitor_interval_minutes.get(), SaveSettings.monitor_interval_minutes_default),
+                SaveSettings.backup_interval_hours:    get_or_default(self.backup_interval_hours.get(), SaveSettings.backup_interval_hours_default),
         }
 
     def restore(self, restore_data: dict) -> None:
         self.interval_restart_hours.set(restore_data.get(SaveSettings.interval_restart_hours, SaveSettings.interval_restart_hours_default))
         self.daily_restart_time.set(restore_data.get(SaveSettings.daily_restart_time, SaveSettings.daily_restart_time_default))
         self.monitor_interval_minutes.set(restore_data.get(SaveSettings.monitor_interval_minutes, SaveSettings.monitor_interval_minutes_default))
-        self.backup_server_interval_hours.set(restore_data.get(SaveSettings.backup_interval_hours, SaveSettings.backup_interval_hours_default))
+        self.backup_interval_hours.set(restore_data.get(SaveSettings.backup_interval_hours, SaveSettings.backup_interval_hours_default))
 
     def get_time(self, button: tk.Button):
         (hours, minutes, period) = self.daily_restart_time.get().replace(":", " ").split(' ')
