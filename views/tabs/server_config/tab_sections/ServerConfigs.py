@@ -9,7 +9,6 @@ from views.tabs.server_config import StartupConfigs
 
 
 class ServerConfigs(TkViewElements.TkLabelFrame, ISavable, IRestorable):
-
     def __init__(self, startup_configs: 'StartupConfigs.StartupConfigs', label_text: str = "Server Configuration", column: int = 0, row: int = 1, sticky: tk.constants = tk.S):
         super().__init__(startup_configs, label_text, column, row, sticky)
         self.startup_configs: StartupConfigs = startup_configs
@@ -56,12 +55,12 @@ class ServerConfigs(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         self.steamcmd_dir_str.set(restore_data.get(SaveSettings.steamcmd_directory, SaveSettings.steamcmd_directory_default))
         self.backup_dir_str.set(restore_data.get(SaveSettings.backup_directory, SaveSettings.backup_directory_default))
 
-    def append_output(self, message):
+    def append_output(self, message) -> None:
         self.startup_configs.append_output(message)
 
-    def create_dir_search(self, btn_txt, dir_var, command, row):
+    def create_dir_search(self, btn_txt, dir_var, command, row) -> None:
         ttk.Button(self, text=btn_txt, command=command, width=30).grid(column=0, row=row, sticky=tk.W, padx=10, pady=10)
         ttk.Label(self, textvariable=dir_var).grid(column=1, row=row, sticky=tk.W, padx=10, pady=10)
 
-    def update_statuses(self):
+    def update_statuses(self) -> None:
         pass

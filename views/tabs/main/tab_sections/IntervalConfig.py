@@ -18,7 +18,7 @@ class IntervalConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
     Specifically, handles all things processed on an interval (restarts, backups, "is running" monitoring)
     """
 
-    time_window = None
+    time_window: tk.Toplevel | None = None
 
     def __init__(self, main_config: 'MainConfig.MainConfig', label_text: str = "Interval Configs", column: int = 0, row: int = 0, sticky: tk.constants = tk.NSEW):
         super().__init__(main_config, label_text, column, row, sticky)
@@ -80,18 +80,18 @@ class IntervalConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         self.monitor_interval_minutes.set(restore_data.get(SaveSettings.monitor_interval_minutes, SaveSettings.monitor_interval_minutes_default))
         self.backup_interval_hours.set(restore_data.get(SaveSettings.backup_interval_hours, SaveSettings.backup_interval_hours_default))
 
-    def append_output(self, message):
+    def append_output(self, message) -> None:
         self.main_config.append_output(message)
 
-    def get_time(self, button: tk.Button):
+    def get_time(self, button: tk.Button) -> None:
         (hours, minutes, period) = self.daily_restart_time.get().replace(":", " ").split(' ')
 
-        self.time_window = tk.Toplevel(button) if self.time_window is None else self.time_window.focus_set()
+        self.time_window: tk.Toplevel = tk.Toplevel(button) if self.time_window is None else self.time_window.focus_set()
         self.time_window.title("")
         self.time_window.protocol("WM_DELETE_WINDOW", self.destroy_time_window)
-        x = self.main_config.application.winfo_x()+button.winfo_x()+100
-        y = self.main_config.application.winfo_y()+button.winfo_y()+25
-        self.time_window.geometry("%dx%d+%d+%d"%(175, 75, x, y))
+        x = self.main_config.application.winfo_x() + button.winfo_x() + 100
+        y = self.main_config.application.winfo_y() + button.winfo_y() + 25
+        self.time_window.geometry("%dx%d+%d+%d" % (175, 75, x, y))
 
         time_picker = SpinTimePickerModern(self.time_window, period=period, min_interval=15)
         time_picker.set12Hrs(hours)
@@ -104,11 +104,11 @@ class IntervalConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         ok_btn.pack(side=tk.LEFT)
         cancel_btn.pack(side=tk.RIGHT)
 
-    def update_daily_restart_time(self, time):
+    def update_daily_restart_time(self, time) -> None:
         self.daily_restart_time.set('{:02d}:{:02d} {}'.format(*time))
         self.destroy_time_window()
 
-    def destroy_time_window(self):
+    def destroy_time_window(self) -> None:
         self.time_window.destroy()
         self.time_window.update()
         self.time_window = None

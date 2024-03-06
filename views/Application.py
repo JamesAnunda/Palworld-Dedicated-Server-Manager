@@ -5,59 +5,60 @@ from tkinter import ttk
 
 from views import OutputConsole
 from views.tabs.about import About
+from views.tabs.alerts_config import AlertsConfig
 from views.tabs.main import MainConfig
 from views.tabs.server_config import StartupConfigs
 
 
 class Application(tk.Tk):
-    tab_control = None
+    tab_control: ttk.Notebook = None
     main_config: MainConfig = None
-    alerts_config = None
+    alerts_config: AlertsConfig = None
     startup_config: StartupConfigs = None
     about: About = None
     output_console: OutputConsole = None
 
     def __init__(self, root_path):
         super().__init__()
-        self.root_path = root_path
-        settings_directory = os.path.join(os.path.expanduser("~"), "Documents/Palworld Server Manager")
+        self.root_path: str = root_path
+        settings_directory: str = os.path.join(os.path.expanduser("~"), "Documents/Palworld Server Manager")
         if not os.path.exists(settings_directory):
             os.makedirs(settings_directory)
-        self.settings_file = os.path.join(os.path.expanduser("~"), "Documents/Palworld Server Manager", "settings.json")
+        self.settings_file: str = os.path.join(os.path.expanduser("~"), "Documents/Palworld Server Manager", "settings.json")
         self.initial_setup()
         self.create_subcomponents()
         try:
             self.iconbitmap(os.path.join(self.root_path, 'palworld_logo.ico'))
         except Exception as e:
-            self.append_output("Icon wasn't able to load due to error: "+str(e))
+            self.append_output("Icon wasn't able to load due to error: " + str(e))
         self.load_settings()
 
-    def initial_setup(self):
+    def initial_setup(self) -> None:
         self.tab_control: ttk.Notebook = ttk.Notebook(self)
         self.title("Palworld Dedicated Server Manager")
         self.tab_control.pack(expand=1, fill="both")
         self.protocol("WM_DELETE_WINDOW", self.on_exit)
 
-    def create_subcomponents(self):
-        self.main_config = MainConfig.MainConfig(self)
-        self.alerts_config = None  # todo
-        self.startup_config = StartupConfigs.StartupConfigs(self)
-        self.about = About.About(self)
-        self.output_console = OutputConsole.OutputConsole(self)
+    def create_subcomponents(self) -> None:
+        self.main_config: MainConfig = MainConfig.MainConfig(self)
+        self.startup_config: StartupConfigs = StartupConfigs.StartupConfigs(self)
+        self.alerts_config: AlertsConfig = AlertsConfig.AlertsConfig(self)
+        self.about: About = About.About(self)
+        self.output_console: OutputConsole = OutputConsole.OutputConsole(self)
 
-    def save(self):
+    def save(self) -> None:
         """
         Gathers and writes the settings of all subordinate elements to the file
         """
-        settings = self.main_config.save() | self.startup_config.save()  #| self.alerts_config.save() | self.about.save()
+        settings = self.main_config.save() | self.startup_config.save()  #| self.alerts_config.save()
         with open(self.settings_file, "w") as file:
             json.dump(settings, file)
 
-    def on_exit(self):
+    def on_exit(self) -> None:
         self.save()
         self.destroy()
 
-    def load_settings(self):
+    def load_settings(self) -> None:
         try:
             with open(self.settings_file, "r") as file:
                 settings = json.load(file)
@@ -74,8 +75,8 @@ class Application(tk.Tk):
             # smtp_server_entry.insert(0, "smtp.gmail.com")
             # smtp_port_entry.insert(0, "587")
 
-    def get_tab_control(self):
+    def get_tab_control(self) -> ttk.Notebook:
         return self.tab_control
 
-    def append_output(self, message):
+    def append_output(self, message) -> None:
         self.output_console.append_output(message)

@@ -21,11 +21,11 @@ class MainConfig(TkViewElements.TkTab, ISavable, IRestorable):
         self.application: Application = application
         self.create_subcomponents()
 
-    def create_subcomponents(self):
-        self.interval_config = IntervalConfig.IntervalConfig(self)
-        self.optional_config = OptionalConfig.OptionalConfig(self)
-        self.server_info = ServerInfo.ServerInfo(self)
-        self.server_functions = ServerFunctions.ServerFunctions(self)
+    def create_subcomponents(self) -> None:
+        self.interval_config: IntervalConfig = IntervalConfig.IntervalConfig(self)
+        self.optional_config: OptionalConfig = OptionalConfig.OptionalConfig(self)
+        self.server_info: ServerInfo = ServerInfo.ServerInfo(self)
+        self.server_functions: ServerFunctions = ServerFunctions.ServerFunctions(self)
 
     def save(self) -> dict:
         return self.interval_config.save() | self.optional_config.save() | self.server_info.save()
@@ -36,5 +36,5 @@ class MainConfig(TkViewElements.TkTab, ISavable, IRestorable):
         self.server_info.restore(restore_data)
         self.server_info.update_server_info()
 
-    def append_output(self, message):
+    def append_output(self, message) -> None:
         self.application.append_output(message)

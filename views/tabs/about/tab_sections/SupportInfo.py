@@ -8,7 +8,7 @@ from views.tabs.about import About
 class SupportInfo(TkViewElements.TkLabelFrame):
     def __init__(self, about: 'About.About', label_text: str = "Support Info", column: int = 0, row: int = 1, sticky: tk.constants = tk.EW):
         super().__init__(about, label_text, column, row, sticky)
-        self.about = about
+        self.about: About = about
 
         ttk.Label(self, text="Have feedback or suggestions? Join my discord and let me know:").grid(column=0, row=0, sticky=tk.E)
         feedback_label_link = tk.Label(self, text="https://discord.gg/bPp9kfWe5t", foreground="blue", cursor="hand2")

@@ -9,19 +9,19 @@ class About(TkViewElements.TkTab):
 
     Creates and tracks the following components: Interval Configs, Optional Configs, Server Info, and Server Functions
     """
-    application_info = None
-    support_info = None
-    supporter_thanks = None
+    application_info: ApplicationInfo = None
+    support_info: SupportInfo = None
+    supporter_thanks: ThanksInfo = None
 
     def __init__(self, application: 'Application.Application', tab_name: str = "About"):
         super().__init__(application.get_tab_control(), tab_name)
-        self.application = application
+        self.application: Application = application
         self.create_subcomponents()
 
-    def create_subcomponents(self):
-        self.application_info = ApplicationInfo.ApplicationInfo(self)
-        self.support_info = SupportInfo.SupportInfo(self)
-        self.supporter_thanks = ThanksInfo.ThanksInfo(self)
+    def create_subcomponents(self) -> None:
+        self.application_info: ApplicationInfo = ApplicationInfo.ApplicationInfo(self)
+        self.support_info: SupportInfo = SupportInfo.SupportInfo(self)
+        self.supporter_thanks: ThanksInfo = ThanksInfo.ThanksInfo(self)
 
-    def append_output(self, message):
+    def append_output(self, message) -> None:
         self.application.append_output(message)

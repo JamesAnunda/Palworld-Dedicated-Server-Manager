@@ -10,7 +10,6 @@ class StartupConfigs(TkViewElements.TkTab, ISavable, IRestorable):
 
     Creates and tracks the following components: Interval Configs, Optional Configs, Server Info, and Server Functions
     """
-
     world_settings: PalWorldSettings = None
     server_configs: ServerConfigs = None
 
@@ -20,7 +19,7 @@ class StartupConfigs(TkViewElements.TkTab, ISavable, IRestorable):
         self.columnconfigure(0, weight=1)
         self.create_subcomponents()
 
-    def create_subcomponents(self):
+    def create_subcomponents(self) -> None:
         self.world_settings = PalWorldSettings.PalWorldSettings(self)
         self.server_configs = ServerConfigs.ServerConfigs(self)
 
@@ -31,5 +30,5 @@ class StartupConfigs(TkViewElements.TkTab, ISavable, IRestorable):
         self.world_settings.restore(restore_data)
         self.server_configs.restore(restore_data)
 
-    def append_output(self, message):
+    def append_output(self, message) -> None:
         self.application.append_output(message)

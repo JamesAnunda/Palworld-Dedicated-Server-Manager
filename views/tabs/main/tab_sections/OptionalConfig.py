@@ -62,5 +62,5 @@ class OptionalConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
     def restore(self, restore_data: dict) -> None:
         self.delete_old_backups_days.set(restore_data.get(SaveSettings.delete_old_backups_days, 1))
 
-    def append_output(self, message):
+    def append_output(self, message) -> None:
         self.main_config.append_output(message)

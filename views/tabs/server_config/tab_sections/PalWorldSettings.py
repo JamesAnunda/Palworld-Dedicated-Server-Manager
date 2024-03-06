@@ -7,7 +7,6 @@ from views.tabs.server_config import StartupConfigs
 
 
 class PalWorldSettings(TkViewElements.TkLabelFrame, IRestorable):
-
     def __init__(self, startup_configs: 'StartupConfigs.StartupConfigs', label_text: str = "PalWorldSettings.ini", column: int = 0, row: int = 0, sticky: tk.constants = tk.constants.N):
         super().__init__(startup_configs, label_text, column, row, sticky)
         self.startup_configs: StartupConfigs = startup_configs
@@ -35,15 +34,15 @@ class PalWorldSettings(TkViewElements.TkLabelFrame, IRestorable):
     def restore(self, restore_data: dict) -> None:
         self.update_settings()
 
-    def append_output(self, message):
+    def append_output(self, message) -> None:
         self.startup_configs.append_output(message)
 
-    def create_setting_view(self, label_text, var, column, row):
+    def create_setting_view(self, label_text, var, column, row) -> None:
         ttk.Label(self, text=label_text).grid(column=column, row=row, padx=10, sticky=tk.W)
-        ttk.Label(self, textvariable=var).grid(column=column, row=row+1, padx=10, sticky=tk.W)
+        ttk.Label(self, textvariable=var).grid(column=column, row=row + 1, padx=10, sticky=tk.W)
 
-    def update_settings(self):
+    def update_settings(self) -> None:
         pass
 
-    def open_palworld_settings(self):
+    def open_palworld_settings(self) -> None:
         pass
