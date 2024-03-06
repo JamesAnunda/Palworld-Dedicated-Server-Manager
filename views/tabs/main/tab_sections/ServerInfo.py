@@ -19,16 +19,16 @@ class ServerInfo(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         row = 0
 
         self.server_status_bool = tk.BooleanVar()
-        self.server_status_str = tk.StringVar(value="?")
+        self.server_status = tk.StringVar(value="?")
         ttk.Label(self, text="Server Status: ", anchor="w").grid(column=0, row=row, sticky=tk.W)
-        self.server_status_label = tk.Label(self, textvariable=self.server_status_str, anchor="e")
+        self.server_status_label = tk.Label(self, textvariable=self.server_status, anchor="e")
         self.server_status_label.grid(column=1, row=row, sticky=tk.E)
 
         row += 1
 
-        self.server_version_str = tk.StringVar(value="?")
+        self.server_version = tk.StringVar(value="?")
         ttk.Label(self, text="Server Version: ", anchor="w").grid(column=0, row=row, sticky=tk.W)
-        ttk.Label(self, textvariable=self.server_version_str, anchor="e").grid(column=1, row=row, sticky=tk.E)
+        ttk.Label(self, textvariable=self.server_version, anchor="e").grid(column=1, row=row, sticky=tk.E)
 
         row += 1
 
@@ -48,12 +48,18 @@ class ServerInfo(TkViewElements.TkLabelFrame, ISavable, IRestorable):
     def restore(self, restore_data: dict) -> None:
         self.external_ip.set(restore_data.get(SaveSettings.external_ip, SaveSettings.external_ip_default))
 
+    def update_server_status(self):
+        """
+        Update self.server_status_bool to the current running state
+        """
+        pass
+
     def update_server_status_label(self) -> None:
         if self.server_status_bool.get():
-            self.server_status_str.set("Online")
+            self.server_status.set("Online")
             self.server_status_label.config(foreground="green", background="SystemButtonFace")  # this is the default tk background color
         else:
-            self.server_status_str.set("OFFLINE")
+            self.server_status.set("OFFLINE")
             (fg, bg) = ("black", "red") if self.server_status_label.cget("foreground") == "red" else ("red", "black")
             self.server_status_label.configure(activeforeground=fg, foreground=fg, activebackground=bg, background=bg)
 
@@ -68,9 +74,10 @@ class ServerInfo(TkViewElements.TkLabelFrame, ISavable, IRestorable):
             # todo - send discord message on change
 
     def update_server_info(self) -> None:
-        self.update_server_status_label()
+        self.update_server_status()
         self.update_server_version()
         self.update_external_ip()
+        self.update_server_status_label()
         self.update_after_id = self.after_cancel(self.update_after_id) if self.update_after_id is not None else None
         self.update_after_id = self.after(1000, lambda: self.update_server_info())
 

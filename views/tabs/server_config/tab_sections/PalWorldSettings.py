@@ -29,7 +29,7 @@ class PalWorldSettings(TkViewElements.TkLabelFrame, IRestorable):
         self.create_setting_view("RCON Enabled:", self.rcon_enabled, 2, 2)
         self.create_setting_view("RCON Password:", self.rcon_pass, 2, 4)
 
-        ttk.Button(self, text="Edit PalWorldSettings.ini", command=self.open_palworld_settings).grid(column=0, row=7, columnspan=3)
+        ttk.Button(self, text="Edit PalWorldSettings.ini", command=self.open_palworld_settings).grid(column=0, row=6, columnspan=3, padx=10, pady=10)
 
     def restore(self, restore_data: dict) -> None:
         self.update_settings()

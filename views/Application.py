@@ -3,6 +3,7 @@ import os
 import tkinter as tk
 from tkinter import ttk
 
+from utilities.Constants import SaveSettings
 from views import OutputConsole
 from views.tabs.about import About
 from views.tabs.alerts_config import AlertsConfig
@@ -27,6 +28,8 @@ class Application(tk.Tk):
         self.settings_file: str = os.path.join(os.path.expanduser("~"), "Documents/Palworld Server Manager", "settings.json")
         self.initial_setup()
         self.create_subcomponents()
+
+        ttk.Style().theme_use('winnative')
         try:
             self.iconbitmap(os.path.join(self.root_path, 'palworld_logo.ico'))
         except Exception as e:
@@ -66,7 +69,8 @@ class Application(tk.Tk):
                 self.startup_config.restore(settings)
         except FileNotFoundError:
             pass
-            # append_to_output("First time startup. Applying default configuration")
+            self.append_output("First time startup or errored config file. Applying default configuration")
+            self.startup_config.server_configs.palworld_dir.set(SaveSettings.palworld_directory_default)
             # server_directory_selection.config(text="No directory selected", foreground="red")
             # arrcon_directory_selection.config(text="No directory selected", foreground="red")
             # steamcmd_directory_selection.config(text="No directory selected", foreground="red")
