@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import font
 from tkinter import ttk
 
 from tktimepicker import constants, SpinTimePickerModern
@@ -36,18 +37,18 @@ class IntervalConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         ttk.Entry(self, textvariable=self.interval_restart_hours, width=3, validate="key", validatecommand=hours_validation).grid(column=2, row=row, sticky=tk.W)
 
         row += 1
-
         # restart at a given time input
         self.daily_restart_bool = tk.BooleanVar(value=False)
         self.daily_restart_time = tk.StringVar(value=SaveSettings.daily_restart_time_default)
         ttk.Checkbutton(self, variable=self.daily_restart_bool, command=None).grid(column=0, row=row, sticky=tk.W)  # todo enable_scheduled_restart
         ttk.Label(self, text="Daily Server Restart Time (12-hour Format):").grid(column=1, row=row, sticky=tk.W)
-        ttk.Label(self, textvariable=self.daily_restart_time).grid(column=2, row=row, sticky=tk.W)
+        time_font = font.nametofont("TkDefaultFont").copy()
+        time_font.configure(weight="bold")
+        ttk.Label(self, textvariable=self.daily_restart_time, font=time_font).grid(column=2, row=row, sticky=tk.W)
         self.time_picker_button = ttk.Button(self, text="Set", command=lambda: self.get_time(self.time_picker_button))
         self.time_picker_button.grid(column=3, row=row, sticky=tk.W)
 
         row += 1
-
         # how frequently to check if the server is running
         self.monitor_interval_bool = tk.BooleanVar(value=False)
         self.monitor_interval_minutes = tk.StringVar()
@@ -56,15 +57,12 @@ class IntervalConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         ttk.Entry(self, textvariable=self.monitor_interval_minutes, width=3, validate="key", validatecommand=minutes_validation).grid(column=2, row=row, sticky=tk.W)
 
         row += 1
-
         # backup every X hours
         self.backup_interval_bool = tk.BooleanVar(value=False)
         self.backup_interval_hours = tk.StringVar()
         ttk.Checkbutton(self, variable=self.backup_interval_bool, command=None).grid(column=0, row=row, sticky=tk.W)  # todo enable_backup_interval
         ttk.Label(self, text="Backup Server Interval (hours):").grid(column=1, row=row, sticky=tk.W)
         ttk.Entry(self, textvariable=self.backup_interval_hours, width=3, validate="key", validatecommand=hours_validation).grid(column=2, row=row, sticky=tk.W)
-
-        row += 1
 
     def save(self) -> dict:
         return {

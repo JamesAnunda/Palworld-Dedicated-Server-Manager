@@ -10,10 +10,11 @@ class ServerFunctions(TkViewElements.TkLabelFrame):
         super().__init__(main_config, label_text, column, row, sticky)
         self.main_config: MainConfig = main_config
 
+        row = 0
         self.functions_combobox = ttk.Combobox(self, justify="center", state="readonly", values=["Start Server", "Graceful Shutdown", "Force Shutdown", "Update Server", "Validate Server Files", "Backup Server"])
-        self.functions_combobox.grid(column=0, row=0, padx=10, pady=10)
+        self.functions_combobox.grid(column=0, row=row, padx=10, pady=10)
         self.functions_combobox.set("-SELECT-")
-        ttk.Button(self, text="Execute", command=self.execute_function).grid(column=1, row=0)
+        ttk.Button(self, text="Execute", command=self.execute_function).grid(column=1, row=row)
 
     def execute_function(self) -> None:  #todo maybe this return type?
         pass

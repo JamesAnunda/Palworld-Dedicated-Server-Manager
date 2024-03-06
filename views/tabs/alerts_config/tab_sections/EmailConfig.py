@@ -17,28 +17,36 @@ class EmailConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         self.smtp_server = tk.StringVar()
         self.smtp_port = tk.StringVar()
 
+        row = 0
         ttk.Label(self, text="Email Address:").grid(column=0, row=0, padx=10, sticky=tk.W)
-        ttk.Entry(self, textvariable=self.email_address, width=35).grid(column=1, row=0, sticky=tk.W)
+        ttk.Entry(self, textvariable=self.email_address, width=35).grid(column=1, row=row, sticky=tk.W)
 
-        ttk.Label(self, text="Email Password:").grid(column=0, row=1, padx=10, sticky=tk.W)
+        row += 1
+        ttk.Label(self, text="Email Password*:").grid(column=0, row=row, padx=10, sticky=tk.W)
         self.email_password_entry = ttk.Entry(self, textvariable=self.email_password, show="*", width=35)
-        self.email_password_entry.grid(column=1, row=1, sticky=tk.W)
+        self.email_password_entry.grid(column=1, row=row, sticky=tk.W)
         self.show_password_btn = ttk.Button(self, text="Show Pass", command=self.show_password)
-        self.show_password_btn.grid(column=2, row=1, sticky=tk.W)
+        self.show_password_btn.grid(column=2, row=row, sticky=tk.W)
 
+        row += 1
         ttk.Label(self, text="SMTP Server:").grid(column=0, row=2, padx=10, sticky=tk.W)
-        ttk.Entry(self, textvariable=self.smtp_server, width=35).grid(column=1, row=2, sticky=tk.W)
+        ttk.Entry(self, textvariable=self.smtp_server, width=35).grid(column=1, row=row, sticky=tk.W)
 
-        ttk.Label(self, text="SMTP Port:").grid(column=0, row=3, padx=10, sticky=tk.W)
-        ttk.Entry(self, textvariable=self.smtp_port, width=5).grid(column=1, row=3, sticky=tk.W)
+        row += 1
+        ttk.Label(self, text="SMTP Port:").grid(column=0, row=row, padx=10, sticky=tk.W)
+        ttk.Entry(self, textvariable=self.smtp_port, width=5).grid(column=1, row=row, sticky=tk.W)
 
-        ttk.Button(self, text="Send Test Email", command=Utilities.send_test_email).grid(column=1, row=4, columnspan=3, sticky=tk.S)
+        row += 1
+        ttk.Button(self, text="Send Test Email", command=Utilities.send_test_email).grid(column=1, row=row, columnspan=3, sticky=tk.S)
+
+        row += 1
+        ttk.Label(self, text="* Password is NOT saved, needs to be put in every Manager restart").grid(column=0, row=row, columnspan=3, sticky=tk.W)
 
     def save(self) -> dict:
         return {
-                SaveSettings.email_address: get_or_default(self.email_address, SaveSettings.email_address_default),
-                SaveSettings.smtp_server:   get_or_default(self.smtp_server, SaveSettings.smtp_server),
-                SaveSettings.smtp_port:     get_or_default(self.smtp_port, SaveSettings.smtp_port_default)
+                SaveSettings.email_address: get_or_default(self.email_address.get(), SaveSettings.email_address_default),
+                SaveSettings.smtp_server:   get_or_default(self.smtp_server.get(), SaveSettings.smtp_server),
+                SaveSettings.smtp_port:     get_or_default(self.smtp_port.get(), SaveSettings.smtp_port_default)
         }
 
     def restore(self, restore_data: dict) -> None:
@@ -47,9 +55,6 @@ class EmailConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         self.smtp_port.set(restore_data.get(SaveSettings.smtp_port, SaveSettings.smtp_port_default))
 
     def show_password(self):
-        if self.email_password_entry.cget('show') == '':
-            self.email_password_entry.config(show='*')
-            self.show_password_btn.config(text='Show Pass')
-        else:
-            self.email_password_entry.config(show='')
-            self.show_password_btn.config(text='Hide Pass')
+        (show, text) = ('*', 'Show Pass') if self.email_password_entry.cget('show') == '' else ('', 'Hide Pass')
+        self.email_password_entry.config(show=show)
+        self.show_password_btn.config(text=text)

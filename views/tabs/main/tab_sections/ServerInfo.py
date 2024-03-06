@@ -32,7 +32,7 @@ class ServerInfo(TkViewElements.TkLabelFrame, ISavable, IRestorable):
 
         row += 1
 
-        self.external_ip = tk.StringVar(value="?")
+        self.external_ip = tk.StringVar()
         ttk.Label(self, text="External IP: ", anchor="w").grid(column=0, row=row, sticky=tk.W)
         ttk.Label(self, textvariable=self.external_ip, width=16, anchor="e").grid(column=1, row=row, sticky=tk.E)
 

@@ -37,8 +37,8 @@ class ServerConfigs(TkViewElements.TkLabelFrame, ISavable, IRestorable):
 
         row += 1
         self.server_start_args = tk.StringVar(value=SaveSettings.server_start_args_default)
-        ttk.Label(self, text="Server Startup Args: ").grid(column=0, row=row, sticky=tk.N)
-        ttk.Entry(self, textvariable=self.server_start_args, width=100).grid(column=1, row=row, columnspan=2, sticky=tk.W)
+        ttk.Label(self, text="Server Startup Args: ").grid(column=0, row=row, padx=10, pady=10, sticky=tk.N)
+        ttk.Entry(self, textvariable=self.server_start_args, width=100).grid(column=1, row=row, columnspan=2, padx=10, pady=10, sticky=tk.W)
 
     def save(self) -> dict:
         return {

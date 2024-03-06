@@ -24,7 +24,7 @@ class SaveSettings:
     steamcmd_directory_default = "No Directory Selected"
 
     backup_directory = "backup_directory"
-    backup_directory_default = ""
+    backup_directory_default = "No Directory Selected"
 
     server_start_args = "server_start_args"
     server_start_args_default = "-useperfthreads -NoAsyncLoadingThread -UseMultithreadForDS -EpicApp=PalServer"
