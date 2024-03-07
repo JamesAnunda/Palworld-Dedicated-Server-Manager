@@ -20,6 +20,6 @@ def minutes_validate(test, action_type, max_val="59"):
     if action_type == '0':
         return True
     if action_type == '1':
-        count = str(int(math.log10(int(max_val.strip())))+1) if str(max_val.strip()).isdigit() else "2"
-        return re.match(r'^\d{1,'+re.escape(count)+'}$', test.strip()) is not None and int(test.strip()) >= 0
+        count = str(int(math.log10(int(max_val.strip()))) + 1) if str(max_val.strip()).isdigit() else "2"
+        return re.match(r'^\d{1,' + re.escape(count) + '}$', test.strip()) is not None and int(test.strip()) >= 0
     return False

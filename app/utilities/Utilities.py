@@ -1,9 +1,6 @@
 import webbrowser
 
 
-def get_or_default(val, default):
-    return val if val != "" else default
-
 def open_discord(event):
     webbrowser.open("https://discord.gg/bPp9kfWe5t")
 

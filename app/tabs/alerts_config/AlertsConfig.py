@@ -14,12 +14,13 @@ class AlertsConfig(TkViewElements.TkTab, ISavable, IRestorable):
         self.create_subcomponents()
 
     def create_subcomponents(self) -> None:
-        self.email_config = EmailConfig.EmailConfig(self)
-        self.discord_config = DiscordConfig.DiscordConfig(self)
+        self.email_config = EmailConfig.EmailConfig(self, self.application.settings_handler)
+        self.discord_config = DiscordConfig.DiscordConfig(self, self.application.settings_handler)
 
-    def save(self) -> dict:
-        return self.discord_config.save() | self.email_config.save()
+    def save(self) -> None:
+        self.discord_config.save()
+        self.email_config.save()
 
-    def restore(self, restore_data: dict) -> None:
-        self.discord_config.restore(restore_data)
-        self.email_config.restore(restore_data)
+    def restore(self) -> None:
+        self.discord_config.restore()
+        self.email_config.restore()

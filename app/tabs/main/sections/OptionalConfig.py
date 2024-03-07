@@ -1,11 +1,10 @@
 import tkinter as tk
 from tkinter import ttk
 
+from app.handlers import SettingsHandler
 from app.tabs.main import MainConfig
 from app.utilities import TkViewElements
-from app.utilities.Constants import SaveSettings
 from app.utilities.StateInterfaces import IRestorable, ISavable
-from app.utilities.Utilities import get_or_default
 from app.utilities.ValidationMethods import numeric_validate
 
 
@@ -16,9 +15,10 @@ class OptionalConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         Specifically, handles all things regarding notifications and backup management
     """
 
-    def __init__(self, main_config: 'MainConfig.MainConfig', label_text: str = "Optional Configs", column: int = 0, row: int = 1, sticky: tk.constants = tk.NSEW):
+    def __init__(self, main_config: 'MainConfig.MainConfig', settings_handler: 'SettingsHandler.SettingsHandler', label_text: str = "Optional Configs", column: int = 0, row: int = 1, sticky: tk.constants = tk.NSEW):
         super().__init__(main_config, label_text, column, row, sticky)
         self.main_config: MainConfig = main_config
+        self.settings_handler: SettingsHandler = settings_handler
 
         row = 0
         self.send_email_bool = tk.BooleanVar(value=False)
@@ -47,13 +47,11 @@ class OptionalConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         ttk.Label(self, text="Backup Server during Restarts").grid(column=1, row=row, sticky=tk.W)
         ttk.Entry(self, textvariable=self.delete_old_backups_days, width=3, validate="key", validatecommand=(self.register(numeric_validate), '%P', '%d', 1, 365)).grid(column=2, row=row, sticky=tk.W)
 
-    def save(self) -> dict:
-        return {
-                SaveSettings.delete_old_backups_days: get_or_default(self.delete_old_backups_days.get(), SaveSettings.delete_old_backups_days_default),
-        }
+    def save(self) -> None:
+        self.settings_handler.delete_old_backups_days.set(self.delete_old_backups_days.get())
 
-    def restore(self, restore_data: dict) -> None:
-        self.delete_old_backups_days.set(restore_data.get(SaveSettings.delete_old_backups_days, 1))
+    def restore(self) -> None:
+        self.delete_old_backups_days.set(self.settings_handler.delete_old_backups_days.get())
 
     def append_output(self, message) -> None:
         self.main_config.append_output(message)

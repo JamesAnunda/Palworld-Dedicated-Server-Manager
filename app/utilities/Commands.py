@@ -5,6 +5,8 @@ class Commands:
     def __init__(self, application: 'Application.Application'):
         self.application: Application = application
         # todo figure out how to integrate this, wire this up
+        #  need to pass a lot of UI elements to get their settings?
+        #  do a SettingsHandler object, pass to all elements and have them update that in real-time?
         pass
 
     def update_commands(self):

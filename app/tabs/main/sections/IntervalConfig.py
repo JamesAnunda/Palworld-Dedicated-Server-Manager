@@ -4,11 +4,10 @@ from tkinter import ttk
 
 from tktimepicker import constants, SpinTimePickerModern
 
+from app.handlers import SettingsHandler
 from app.tabs.main import MainConfig
 from app.utilities import TkViewElements
-from app.utilities.Constants import SaveSettings
 from app.utilities.StateInterfaces import IRestorable, ISavable
-from app.utilities.Utilities import get_or_default
 from app.utilities.ValidationMethods import hours_validate, minutes_validate
 
 
@@ -21,9 +20,10 @@ class IntervalConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
 
     time_window: tk.Toplevel | None = None
 
-    def __init__(self, main_config: 'MainConfig.MainConfig', label_text: str = "Interval Configs", column: int = 0, row: int = 0, sticky: tk.constants = tk.NSEW):
+    def __init__(self, main_config: 'MainConfig.MainConfig', settings_handler: 'SettingsHandler.SettingsHandler', label_text: str = "Interval Configs", column: int = 0, row: int = 0, sticky: tk.constants = tk.NSEW):
         super().__init__(main_config, label_text, column, row, sticky)
         self.main_config: MainConfig = main_config
+        self.settings_handler: SettingsHandler = settings_handler
 
         hours_validation = (self.register(hours_validate), '%P', '%d', 24)
         minutes_validation = (self.register(minutes_validate), '%P', '%d', 99)
@@ -39,7 +39,7 @@ class IntervalConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         row += 1
         # restart at a given time input
         self.daily_restart_bool = tk.BooleanVar(value=False)
-        self.daily_restart_time = tk.StringVar(value=SaveSettings.daily_restart_time_default)
+        self.daily_restart_time = tk.StringVar(value=self.settings_handler.daily_restart_time.get())
         ttk.Checkbutton(self, variable=self.daily_restart_bool, command=None).grid(column=0, row=row, sticky=tk.W)  # todo enable_scheduled_restart
         ttk.Label(self, text="Daily Server Restart Time (12-hour Format):").grid(column=1, row=row, sticky=tk.W)
         time_font = font.nametofont("TkDefaultFont").copy()
@@ -64,19 +64,17 @@ class IntervalConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         ttk.Label(self, text="Backup Server Interval (hours):").grid(column=1, row=row, sticky=tk.W)
         ttk.Entry(self, textvariable=self.backup_interval_hours, width=3, validate="key", validatecommand=hours_validation).grid(column=2, row=row, sticky=tk.W)
 
-    def save(self) -> dict:
-        return {
-                SaveSettings.interval_restart_hours:   get_or_default(self.interval_restart_hours.get(), SaveSettings.interval_restart_hours_default),
-                SaveSettings.daily_restart_time:       get_or_default(self.daily_restart_time.get(), SaveSettings.daily_restart_time_default),
-                SaveSettings.monitor_interval_minutes: get_or_default(self.monitor_interval_minutes.get(), SaveSettings.monitor_interval_minutes_default),
-                SaveSettings.backup_interval_hours:    get_or_default(self.backup_interval_hours.get(), SaveSettings.backup_interval_hours_default),
-        }
+    def save(self) -> None:
+        self.settings_handler.interval_restart_hours.set(self.interval_restart_hours.get())
+        self.settings_handler.daily_restart_time.set(self.daily_restart_time.get())
+        self.settings_handler.monitor_interval_minutes.set(self.monitor_interval_minutes.get())
+        self.settings_handler.backup_interval_hours.set(self.backup_interval_hours.get())
 
-    def restore(self, restore_data: dict) -> None:
-        self.interval_restart_hours.set(restore_data.get(SaveSettings.interval_restart_hours, SaveSettings.interval_restart_hours_default))
-        self.daily_restart_time.set(restore_data.get(SaveSettings.daily_restart_time, SaveSettings.daily_restart_time_default))
-        self.monitor_interval_minutes.set(restore_data.get(SaveSettings.monitor_interval_minutes, SaveSettings.monitor_interval_minutes_default))
-        self.backup_interval_hours.set(restore_data.get(SaveSettings.backup_interval_hours, SaveSettings.backup_interval_hours_default))
+    def restore(self) -> None:
+        self.interval_restart_hours.set(self.settings_handler.interval_restart_hours.get())
+        self.daily_restart_time.set(self.settings_handler.daily_restart_time.get())
+        self.monitor_interval_minutes.set(self.settings_handler.monitor_interval_minutes.get())
+        self.backup_interval_hours.set(self.settings_handler.backup_interval_hours.get())
 
     def append_output(self, message) -> None:
         self.main_config.append_output(message)

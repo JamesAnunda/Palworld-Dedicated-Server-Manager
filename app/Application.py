@@ -4,12 +4,12 @@ import tkinter as tk
 from tkinter import ttk
 
 from app import OutputConsole
+from app.handlers.SettingsHandler import SettingsHandler
 from app.tabs.about import About
 from app.tabs.alerts_config import AlertsConfig
 from app.tabs.main import MainConfig
 from app.tabs.startup_config import StartupConfigs
 from app.utilities import Commands
-from app.utilities.Constants import SaveSettings
 
 
 # todo: add settings location directory set?
@@ -31,6 +31,7 @@ class Application(tk.Tk):
             os.makedirs(settings_directory)
         self.settings_file: str = os.path.join(os.path.expanduser("~"), "Documents\\Palworld Server Manager", "settings.json")
         self.initial_setup()
+        self.settings_handler: SettingsHandler = SettingsHandler()
         self.create_subcomponents()
 
         try:
@@ -59,9 +60,11 @@ class Application(tk.Tk):
         """
         Gathers and writes the settings of all subordinate elements to the file
         """
-        settings = self.main_config.save() | self.startup_config.save() | self.alerts_config.save()
+        self.main_config.save()
+        self.startup_config.save()
+        self.alerts_config.save()
         with open(self.settings_file, "w") as file:
-            json.dump(settings, file)
+            json.dump(self.settings_handler.save(), file)
 
     def on_exit(self) -> None:
         self.save()
@@ -70,21 +73,15 @@ class Application(tk.Tk):
     def load_settings(self) -> None:
         try:
             with open(self.settings_file, "r") as file:
-                settings = json.load(file)
-                self.main_config.restore(settings)
-                self.startup_config.restore(settings)
-                self.alerts_config.restore(settings)
+                self.settings_handler.restore(file)
+                self.main_config.restore()
+                self.startup_config.restore()
+                self.alerts_config.restore()
         except FileNotFoundError:
-            pass
             self.append_output("First time startup or errored config file. Applying default configuration")
-            self.startup_config.restore({
-                    SaveSettings.palworld_directory: SaveSettings.palworld_directory_default,
-                    SaveSettings.server_start_args:  SaveSettings.server_start_args_default
-            })
-            self.alerts_config.restore({
-                    SaveSettings.smtp_server: SaveSettings.smtp_server_default,
-                    SaveSettings.smtp_port:   SaveSettings.smtp_port_default
-            })
+            self.main_config.restore()
+            self.startup_config.restore()
+            self.alerts_config.restore()
 
     def get_tab_control(self) -> ttk.Notebook:
         return self.tab_control

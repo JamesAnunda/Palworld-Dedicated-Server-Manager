@@ -20,15 +20,15 @@ class StartupConfigs(TkViewElements.TkTab, ISavable, IRestorable):
         self.create_subcomponents()
 
     def create_subcomponents(self) -> None:
-        self.world_settings = PalWorldSettings.PalWorldSettings(self)
-        self.server_configs = ServerConfigs.ServerConfigs(self)
+        self.world_settings = PalWorldSettings.PalWorldSettings(self, self.application.settings_handler)
+        self.server_configs = ServerConfigs.ServerConfigs(self, self.application.settings_handler)
 
-    def save(self) -> dict:
-        return self.server_configs.save()
+    def save(self) -> None:
+        self.server_configs.save()
 
-    def restore(self, restore_data: dict) -> None:
-        self.world_settings.restore(restore_data)
-        self.server_configs.restore(restore_data)
+    def restore(self) -> None:
+        self.world_settings.restore()
+        self.server_configs.restore()
 
     def append_output(self, message) -> None:
         self.application.append_output(message)

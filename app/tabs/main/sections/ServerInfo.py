@@ -3,18 +3,19 @@ from tkinter import ttk
 
 import requests
 
+from app.handlers import SettingsHandler
 from app.tabs.main import MainConfig
-from app.utilities import TkViewElements, Utilities
-from app.utilities.Constants import SaveSettings
+from app.utilities import TkViewElements
 from app.utilities.StateInterfaces import IRestorable, ISavable
 
 
 class ServerInfo(TkViewElements.TkLabelFrame, ISavable, IRestorable):
     update_after_id: str | None = None  # keeps track of update threads, will cancel existing one if new thread is created before it's finished
 
-    def __init__(self, main_config: 'MainConfig.MainConfig', label_text: str = "Server Info", column: int = 1, row: int = 0, sticky: tk.constants = tk.NSEW):
+    def __init__(self, main_config: 'MainConfig.MainConfig', settings_handler: 'SettingsHandler.SettingsHandler', label_text: str = "Server Info", column: int = 1, row: int = 0, sticky: tk.constants = tk.NSEW):
         super().__init__(main_config, label_text, column, row, sticky)
         self.main_config: MainConfig = main_config
+        self.settings_handler: SettingsHandler = settings_handler
 
         row = 0
 
@@ -40,13 +41,11 @@ class ServerInfo(TkViewElements.TkLabelFrame, ISavable, IRestorable):
 
         ttk.Button(self, text="Update Now", command=self.update_server_info).grid(column=0, row=row, columnspan=2, sticky=tk.S)
 
-    def save(self) -> dict:
-        return {
-                SaveSettings.external_ip: Utilities.get_or_default(self.external_ip.get(), SaveSettings.external_ip_default)
-        }
+    def save(self) -> None:
+        self.settings_handler.external_ip.set(self.external_ip.get())
 
-    def restore(self, restore_data: dict) -> None:
-        self.external_ip.set(restore_data.get(SaveSettings.external_ip, SaveSettings.external_ip_default))
+    def restore(self) -> None:
+        self.external_ip.set(self.settings_handler.external_ip.get())
 
     def update_server_status(self):
         """

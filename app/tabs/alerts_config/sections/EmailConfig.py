@@ -1,16 +1,16 @@
 import tkinter as tk
 from tkinter import ttk
 
+from app.handlers import SettingsHandler
 from app.tabs.alerts_config import AlertsConfig
 from app.utilities import TkViewElements, Utilities
-from app.utilities.Constants import SaveSettings
 from app.utilities.StateInterfaces import IRestorable, ISavable
-from app.utilities.Utilities import get_or_default
 
 
 class EmailConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
-    def __init__(self, alerts_config: 'AlertsConfig.AlertsConfig', label_text: str = "Email Config", column: int = 0, row: int = 0, sticky: tk.constants = tk.NSEW):
+    def __init__(self, alerts_config: 'AlertsConfig.AlertsConfig', settings_handler: 'SettingsHandler.SettingsHandler', label_text: str = "Email Config", column: int = 0, row: int = 0, sticky: tk.constants = tk.NSEW):
         super().__init__(alerts_config, label_text, column, row, sticky)
+        self.settings_handler: SettingsHandler = settings_handler
 
         self.email_address = tk.StringVar()
         self.email_password = tk.StringVar()
@@ -42,17 +42,15 @@ class EmailConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         row += 1
         ttk.Label(self, text="* Password is NOT saved, needs to be put in every Manager restart").grid(column=0, row=row, columnspan=3, sticky=tk.W)
 
-    def save(self) -> dict:
-        return {
-                SaveSettings.email_address: get_or_default(self.email_address.get(), SaveSettings.email_address_default),
-                SaveSettings.smtp_server:   get_or_default(self.smtp_server.get(), SaveSettings.smtp_server),
-                SaveSettings.smtp_port:     get_or_default(self.smtp_port.get(), SaveSettings.smtp_port_default)
-        }
+    def save(self) -> None:
+        self.settings_handler.email_address.set(self.email_address.get())
+        self.settings_handler.smtp_server.set(self.smtp_server.get())
+        self.settings_handler.smtp_port.set(self.smtp_port.get())
 
-    def restore(self, restore_data: dict) -> None:
-        self.email_address.set(restore_data.get(SaveSettings.email_address, SaveSettings.email_address_default))
-        self.smtp_server.set(restore_data.get(SaveSettings.smtp_server, SaveSettings.smtp_server_default))
-        self.smtp_port.set(restore_data.get(SaveSettings.smtp_port, SaveSettings.smtp_port_default))
+    def restore(self) -> None:
+        self.email_address.set(self.settings_handler.email_address.get())
+        self.smtp_server.set(self.settings_handler.smtp_server.get())
+        self.smtp_port.set(self.settings_handler.smtp_port.get())
 
     def show_password(self):
         (show, text) = ('*', 'Show Pass') if self.email_password_entry.cget('show') == '' else ('', 'Hide Pass')

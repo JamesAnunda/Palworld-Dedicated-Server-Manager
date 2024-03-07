@@ -1,15 +1,17 @@
 import tkinter as tk
 from tkinter import ttk
 
+from app.handlers import SettingsHandler
 from app.tabs.startup_config import StartupConfigs
 from app.utilities import TkViewElements
 from app.utilities.StateInterfaces import IRestorable
 
 
 class PalWorldSettings(TkViewElements.TkLabelFrame, IRestorable):
-    def __init__(self, startup_configs: 'StartupConfigs.StartupConfigs', label_text: str = "PalWorldSettings.ini", column: int = 0, row: int = 0, sticky: tk.constants = tk.constants.N):
+    def __init__(self, startup_configs: 'StartupConfigs.StartupConfigs', settings_handler: 'SettingsHandler.SettingsHandler', label_text: str = "PalWorldSettings.ini", column: int = 0, row: int = 0, sticky: tk.constants = tk.constants.N):
         super().__init__(startup_configs, label_text, column, row, sticky)
         self.startup_configs: StartupConfigs = startup_configs
+        self.settings_handler: SettingsHandler = settings_handler
 
         self.server_name = tk.StringVar(value="-")
         self.server_desc = tk.StringVar(value="-")
@@ -31,7 +33,7 @@ class PalWorldSettings(TkViewElements.TkLabelFrame, IRestorable):
 
         ttk.Button(self, text="Edit PalWorldSettings.ini", command=self.open_palworld_settings).grid(column=0, row=6, columnspan=3, padx=10, pady=10)
 
-    def restore(self, restore_data: dict) -> None:
+    def restore(self) -> None:
         self.update_settings()
 
     def append_output(self, message) -> None:
