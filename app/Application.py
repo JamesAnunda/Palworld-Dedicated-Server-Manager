@@ -3,12 +3,13 @@ import os
 import tkinter as tk
 from tkinter import ttk
 
-from utilities.Constants import SaveSettings
-from views import OutputConsole
-from views.tabs.about import About
-from views.tabs.alerts_config import AlertsConfig
-from views.tabs.main import MainConfig
-from views.tabs.server_config import StartupConfigs
+from app import OutputConsole
+from app.tabs.about import About
+from app.tabs.alerts_config import AlertsConfig
+from app.tabs.main import MainConfig
+from app.tabs.startup_config import StartupConfigs
+from app.utilities import Commands
+from app.utilities.Constants import SaveSettings
 
 
 # todo: add settings location directory set?
@@ -20,6 +21,7 @@ class Application(tk.Tk):
     startup_config: StartupConfigs = None
     about: About = None
     output_console: OutputConsole = None
+    commands: Commands = None
 
     def __init__(self, root_path):
         super().__init__()
@@ -49,6 +51,9 @@ class Application(tk.Tk):
         self.startup_config: StartupConfigs = StartupConfigs.StartupConfigs(self)
         self.alerts_config: AlertsConfig = AlertsConfig.AlertsConfig(self)
         self.about: About = About.About(self)
+
+    def initialize_commands(self):
+        self.commands = Commands.Commands(self)
 
     def save(self) -> None:
         """

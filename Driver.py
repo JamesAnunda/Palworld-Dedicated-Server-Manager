@@ -1,7 +1,7 @@
 import os
 import sys
 
-from views.Application import Application
+from app.Application import Application
 
 
 def run():

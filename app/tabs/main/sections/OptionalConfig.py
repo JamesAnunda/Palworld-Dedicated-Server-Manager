@@ -1,12 +1,12 @@
 import tkinter as tk
 from tkinter import ttk
 
-from utilities import TkViewElements
-from utilities.Constants import SaveSettings
-from utilities.StateInterfaces import IRestorable, ISavable
-from utilities.Utilities import get_or_default
-from utilities.ValidationMethods import numeric_validate
-from views.tabs.main import MainConfig
+from app.tabs.main import MainConfig
+from app.utilities import TkViewElements
+from app.utilities.Constants import SaveSettings
+from app.utilities.StateInterfaces import IRestorable, ISavable
+from app.utilities.Utilities import get_or_default
+from app.utilities.ValidationMethods import numeric_validate
 
 
 class OptionalConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):

@@ -1,7 +1,7 @@
-from utilities import TkViewElements
-from utilities.StateInterfaces import IRestorable, ISavable
-from views import Application
-from views.tabs.alerts_config.tab_sections import DiscordConfig, EmailConfig
+from app import Application
+from app.tabs.alerts_config.sections import DiscordConfig, EmailConfig
+from app.utilities import TkViewElements
+from app.utilities.StateInterfaces import IRestorable, ISavable
 
 
 class AlertsConfig(TkViewElements.TkTab, ISavable, IRestorable):

@@ -1,7 +1,7 @@
-from utilities import TkViewElements
-from utilities.StateInterfaces import IRestorable, ISavable
-from views import Application
-from views.tabs.server_config.tab_sections import PalWorldSettings, ServerConfigs
+from app import Application
+from app.tabs.startup_config.sections import PalWorldSettings, ServerConfigs
+from app.utilities import TkViewElements
+from app.utilities.StateInterfaces import IRestorable, ISavable
 
 
 class StartupConfigs(TkViewElements.TkTab, ISavable, IRestorable):

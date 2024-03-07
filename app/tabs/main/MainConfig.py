@@ -1,7 +1,7 @@
-from utilities import TkViewElements
-from utilities.StateInterfaces import IRestorable, ISavable
-from views import Application
-from views.tabs.main.tab_sections import IntervalConfig, OptionalConfig, ServerFunctions, ServerInfo
+from app import Application
+from app.tabs.main.sections import IntervalConfig, OptionalConfig, ServerFunctions, ServerInfo
+from app.utilities import TkViewElements
+from app.utilities.StateInterfaces import IRestorable, ISavable
 
 
 class MainConfig(TkViewElements.TkTab, ISavable, IRestorable):

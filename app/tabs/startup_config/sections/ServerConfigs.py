@@ -1,11 +1,11 @@
 import tkinter as tk
 from tkinter import ttk
 
-from utilities import TkViewElements
-from utilities.Constants import SaveSettings
-from utilities.StateInterfaces import IRestorable, ISavable
-from utilities.Utilities import get_or_default
-from views.tabs.server_config import StartupConfigs
+from app.tabs.startup_config import StartupConfigs
+from app.utilities import TkViewElements
+from app.utilities.Constants import SaveSettings
+from app.utilities.StateInterfaces import IRestorable, ISavable
+from app.utilities.Utilities import get_or_default
 
 
 class ServerConfigs(TkViewElements.TkLabelFrame, ISavable, IRestorable):

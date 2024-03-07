@@ -1,9 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
 
-from utilities import TkViewElements
-from utilities.StateInterfaces import IRestorable
-from views.tabs.server_config import StartupConfigs
+from app.tabs.startup_config import StartupConfigs
+from app.utilities import TkViewElements
+from app.utilities.StateInterfaces import IRestorable
 
 
 class PalWorldSettings(TkViewElements.TkLabelFrame, IRestorable):

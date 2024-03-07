@@ -1,6 +1,6 @@
-from utilities import TkViewElements
-from views import Application
-from views.tabs.about.tab_sections import ApplicationInfo, SupportInfo, ThanksInfo
+from app import Application
+from app.tabs.about.sections import ApplicationInfo, SupportInfo, ThanksInfo
+from app.utilities import TkViewElements
 
 
 class About(TkViewElements.TkTab):

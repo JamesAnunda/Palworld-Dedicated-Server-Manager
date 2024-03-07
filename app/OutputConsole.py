@@ -2,7 +2,7 @@ import tkinter as tk
 from datetime import datetime
 from tkinter import ttk
 
-from views import Application
+from app import Application
 
 
 class OutputConsole(tk.Frame):

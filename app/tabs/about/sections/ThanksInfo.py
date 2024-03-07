@@ -1,8 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 
-from utilities import TkViewElements
-from views.tabs.about import About
+from app.tabs.about import About
+from app.utilities import TkViewElements
 
 
 class ThanksInfo(TkViewElements.TkLabelFrame):
@@ -21,4 +21,4 @@ class ThanksInfo(TkViewElements.TkLabelFrame):
         Cut Supporters list into n-sized chunks
         """
         for i in range(0, len(self.supporters), n):
-            yield self.supporters[i:i+n]
+            yield self.supporters[i:i + n]

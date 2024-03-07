@@ -3,10 +3,10 @@ from tkinter import ttk
 
 import requests
 
-from utilities import TkViewElements, Utilities
-from utilities.Constants import SaveSettings
-from utilities.StateInterfaces import IRestorable, ISavable
-from views.tabs.main import MainConfig
+from app.tabs.main import MainConfig
+from app.utilities import TkViewElements, Utilities
+from app.utilities.Constants import SaveSettings
+from app.utilities.StateInterfaces import IRestorable, ISavable
 
 
 class ServerInfo(TkViewElements.TkLabelFrame, ISavable, IRestorable):
@@ -64,7 +64,13 @@ class ServerInfo(TkViewElements.TkLabelFrame, ISavable, IRestorable):
             self.server_status_label.configure(activeforeground=fg, foreground=fg, activebackground=bg, background=bg)
 
     def update_server_version(self) -> None:
-        pass  # todo update server version label
+        if self.server_status_bool.get():
+            pass
+        else:
+            self.server_version.set("?")
+        # todo: update server version label from runtime as server starts, check if is up to date version?
+        #  add button to get latest Palserver version?
+        pass
 
     def update_external_ip(self) -> None:
         ip_response = requests.get('https://api.ipify.org').text

@@ -2,8 +2,8 @@ import os
 import tkinter as tk
 from tkinter import ttk
 
-from utilities import TkViewElements, Utilities
-from views.tabs.about import About
+from app.tabs.about import About
+from app.utilities import TkViewElements, Utilities
 
 
 class ApplicationInfo(TkViewElements.TkLabelFrame):

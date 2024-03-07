@@ -4,12 +4,12 @@ from tkinter import ttk
 
 from tktimepicker import constants, SpinTimePickerModern
 
-from utilities import TkViewElements
-from utilities.Constants import SaveSettings
-from utilities.StateInterfaces import IRestorable, ISavable
-from utilities.Utilities import get_or_default
-from utilities.ValidationMethods import hours_validate, minutes_validate
-from views.tabs.main import MainConfig
+from app.tabs.main import MainConfig
+from app.utilities import TkViewElements
+from app.utilities.Constants import SaveSettings
+from app.utilities.StateInterfaces import IRestorable, ISavable
+from app.utilities.Utilities import get_or_default
+from app.utilities.ValidationMethods import hours_validate, minutes_validate
 
 
 class IntervalConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):

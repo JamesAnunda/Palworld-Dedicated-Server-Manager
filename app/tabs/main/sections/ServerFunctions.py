@@ -1,11 +1,13 @@
 import tkinter as tk
 from tkinter import ttk
 
-from utilities import TkViewElements
-from views.tabs.main import MainConfig
+from app.tabs.main import MainConfig
+from app.utilities import Commands, TkViewElements
 
 
 class ServerFunctions(TkViewElements.TkLabelFrame):
+    commands_instance: Commands = None
+
     def __init__(self, main_config: 'MainConfig.MainConfig', label_text: str = "Server Functions", column: int = 0, row: int = 2, sticky: tk.constants = tk.NSEW):
         super().__init__(main_config, label_text, column, row, sticky)
         self.main_config: MainConfig = main_config
@@ -15,6 +17,9 @@ class ServerFunctions(TkViewElements.TkLabelFrame):
         self.functions_combobox.grid(column=0, row=row, padx=10, pady=10)
         self.functions_combobox.set("-SELECT-")
         ttk.Button(self, text="Execute", command=self.execute_function).grid(column=1, row=row)
+
+    def set_commands_instance(self, commands_instance: 'Commands.Commands'):
+        pass
 
     def execute_function(self) -> None:  #todo maybe this return type?
         pass

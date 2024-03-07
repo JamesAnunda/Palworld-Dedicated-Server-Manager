@@ -1,11 +1,11 @@
 import tkinter as tk
 from tkinter import ttk
 
-from utilities import TkViewElements, Utilities
-from utilities.Constants import SaveSettings
-from utilities.StateInterfaces import IRestorable, ISavable
-from utilities.Utilities import get_or_default
-from views.tabs.alerts_config import AlertsConfig
+from app.tabs.alerts_config import AlertsConfig
+from app.utilities import TkViewElements, Utilities
+from app.utilities.Constants import SaveSettings
+from app.utilities.StateInterfaces import IRestorable, ISavable
+from app.utilities.Utilities import get_or_default
 
 
 class EmailConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
