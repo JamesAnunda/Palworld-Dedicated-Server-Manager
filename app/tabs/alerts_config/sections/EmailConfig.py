@@ -3,8 +3,9 @@ from tkinter import ttk
 
 from app.handlers import SettingsHandler
 from app.tabs.alerts_config import AlertsConfig
-from app.utilities import TkViewElements, Utilities
+from app.utilities import TkViewElements
 from app.utilities.StateInterfaces import IRestorable, ISavable
+from app.utilities.Utilities import Utilities
 
 
 class EmailConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):

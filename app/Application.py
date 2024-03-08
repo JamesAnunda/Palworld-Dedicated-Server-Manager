@@ -9,7 +9,7 @@ from app.tabs.about import About
 from app.tabs.alerts_config import AlertsConfig
 from app.tabs.main import MainConfig
 from app.tabs.startup_config import StartupConfigs
-from app.utilities import Commands
+from app.utilities import Commands, Utilities
 
 
 # todo: add settings location directory set?
@@ -39,6 +39,7 @@ class Application(tk.Tk):
         except Exception as e:
             self.append_output("Icon wasn't able to load due to error: " + str(e))
         self.load_settings()
+        Utilities.Utilities.set_application(self)
 
     def initial_setup(self) -> None:
         self.tab_control: ttk.Notebook = ttk.Notebook(self)

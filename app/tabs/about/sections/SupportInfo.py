@@ -2,7 +2,8 @@ import tkinter as tk
 from tkinter import ttk
 
 from app.tabs.about import About
-from app.utilities import TkViewElements, Utilities
+from app.utilities import TkViewElements
+from app.utilities.Utilities import Utilities
 
 
 class SupportInfo(TkViewElements.TkLabelFrame):
@@ -24,4 +25,4 @@ class SupportInfo(TkViewElements.TkLabelFrame):
 
         row += 1
         buy_me_beer_link.grid(column=0, row=row, columnspan=2)
-        buy_me_beer_link.bind("<Button-1>", Utilities.open_BMAB)
+        buy_me_beer_link.bind("<Button-1>", Utilities.open_bmab)
