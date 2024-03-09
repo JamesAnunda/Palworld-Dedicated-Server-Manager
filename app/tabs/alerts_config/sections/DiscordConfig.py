@@ -1,11 +1,11 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import messagebox, ttk
 
 from app.handlers import SettingsHandler
 from app.tabs.alerts_config import AlertsConfig
 from app.utilities import TkViewElements
 from app.utilities.StateInterfaces import IRestorable, ISavable
-from app.utilities.Utilities import Utilities
+from app.utilities.Utilities import MessageResponse, Utilities
 
 
 class DiscordConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
@@ -30,4 +30,7 @@ class DiscordConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
 
     def send_test_discord_message(self):
         self.save()
-        Utilities.send_test_discord_message()
+        response: MessageResponse = Utilities.send_test_discord_message()
+        if not response.success:
+            print(response.message_level)
+            messagebox.showerror(title="Test Discord Message Error", message=response.message_level.name.upper() + ": " + response.response)

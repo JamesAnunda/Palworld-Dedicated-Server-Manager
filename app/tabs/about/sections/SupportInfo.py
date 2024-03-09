@@ -21,8 +21,8 @@ class SupportInfo(TkViewElements.TkLabelFrame):
         buy_me_beer_label = ttk.Label(self, justify="center", text="This application is completely free and no features will ever be behind a paywall. "
                                                                    "If you would like to support me I would greatly appreciate it. You can buy me a beer here:")
         buy_me_beer_label.grid(column=0, row=row, columnspan=2, sticky=tk.N)
-        buy_me_beer_link = tk.Label(self, text="https://www.buymeacoffee.com/thewisestguy", foreground="blue", cursor="hand2")
 
         row += 1
+        buy_me_beer_link = tk.Label(self, text="https://www.buymeacoffee.com/thewisestguy", foreground="blue", cursor="hand2")
         buy_me_beer_link.grid(column=0, row=row, columnspan=2)
         buy_me_beer_link.bind("<Button-1>", Utilities.open_bmab)

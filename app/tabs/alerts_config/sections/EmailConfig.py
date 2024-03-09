@@ -1,16 +1,16 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import messagebox, ttk
 
 from app.handlers import SettingsHandler
 from app.tabs.alerts_config import AlertsConfig
 from app.utilities import TkViewElements
 from app.utilities.StateInterfaces import IRestorable, ISavable
-from app.utilities.Utilities import Utilities
+from app.utilities.Utilities import MessageResponse, Utilities
 
 
 class EmailConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
     def __init__(self, alerts_config: 'AlertsConfig.AlertsConfig', settings_handler: 'SettingsHandler.SettingsHandler', label_text: str = "Email Config", column: int = 0, row: int = 0, sticky: tk.constants = tk.NSEW):
-        super().__init__(alerts_config, label_text, column, row, sticky)
+        super().__init__(alerts_config, label_text + "**", column, row, sticky)
         self.settings_handler: SettingsHandler = settings_handler
 
         self.email_address = tk.StringVar()
@@ -38,13 +38,19 @@ class EmailConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         ttk.Entry(self, textvariable=self.smtp_port, width=5).grid(column=1, row=row, sticky=tk.W)
 
         row += 1
-        ttk.Button(self, text="Send Test Email", command=Utilities.send_test_email).grid(column=1, row=row, columnspan=3, sticky=tk.S)
+        ttk.Button(self, text="Send Test Email", command=self.send_test_email).grid(column=1, row=row, sticky=tk.W)
 
         row += 1
         ttk.Label(self, text="* Password is NOT saved, needs to be put in every Manager restart").grid(column=0, row=row, columnspan=3, sticky=tk.W)
+        row += 1
+        ttk.Label(self, text="** This likely requires some configuration of the email account ").grid(column=0, row=row, columnspan=3, sticky=tk.W)
+        google_link = tk.Label(self, text="(app password)", foreground="blue", cursor="hand2")
+        google_link.grid(column=2, row=row, sticky=tk.W)
+        google_link.bind("<Button-1>", Utilities.open_google_app_password)
 
     def save(self) -> None:
         self.settings_handler.email_address.set(self.email_address.get())
+        self.settings_handler.email_password.set(self.email_password.get())
         self.settings_handler.smtp_server.set(self.smtp_server.get())
         self.settings_handler.smtp_port.set(self.smtp_port.get())
 
@@ -54,6 +60,13 @@ class EmailConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         self.smtp_port.set(self.settings_handler.smtp_port.get())
 
     def show_password(self):
+        self.save()
         (show, text) = ('*', 'Show Pass') if self.email_password_entry.cget('show') == '' else ('', 'Hide Pass')
         self.email_password_entry.config(show=show)
         self.show_password_btn.config(text=text)
+
+    def send_test_email(self):
+        self.save()
+        response: MessageResponse = Utilities.send_test_email()
+        if not response.success:
+            messagebox.showerror(title="Test Email Error", message=response.message_level.name.upper() + ": " + response.response)

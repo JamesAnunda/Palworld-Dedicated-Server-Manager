@@ -36,6 +36,7 @@ class SettingsHandler(dict):
         self.server_start_args = SettingsItem("", "-useperfthreads -NoAsyncLoadingThread -UseMultithreadForDS -EpicApp=PalServer")
 
         self.email_address = SettingsItem("", "")
+        self.email_password = SettingsItem("", "")
         self.smtp_server = SettingsItem("", "smtp.gmail.com")
         self.smtp_port = SettingsItem("", "587")
         self.discord_webhook = SettingsItem("", "")
@@ -50,7 +51,7 @@ class SettingsHandler(dict):
         self[key] = value
 
     def save(self) -> dict[str, str]:
-        return dict((setting, self[setting].get()) for setting in self.keys())
+        return dict((setting, self[setting].get()) for setting in self.keys() if self[setting] != self.email_password)
 
     def restore(self, file: TextIO):
         settings = json.load(file)

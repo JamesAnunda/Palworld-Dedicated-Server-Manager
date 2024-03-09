@@ -1,6 +1,6 @@
 import tkinter as tk
 from datetime import datetime
-from tkinter import ttk
+from tkinter import DISABLED, NORMAL, ttk
 
 from app import Application
 
@@ -17,12 +17,15 @@ class OutputConsole(tk.Frame):
 
         self.output_text = tk.Text(self, wrap=tk.WORD, height=10, width=85, yscrollcommand=scrollbar.set)
         self.output_text.pack(padx=10, pady=10, expand=True, fill=tk.BOTH)
-        self.output_text.bind("<Key>", lambda e: "break")  # prevent typing into console
+        self.output_text.config(state=DISABLED)
+        # self.output_text.bind("<Key>", lambda e: "break")  # prevent typing into console
         scrollbar.config(command=self.output_text.yview)
 
     def append_output(self, message) -> None:
         message_time = datetime.now().astimezone()
         timezone = message_time.tzname().split(" ")
         tz_short = "] " if type(timezone) is not list else " " + timezone[0] + "/" + timezone[1][0] + timezone[2][0] + timezone[3][0] + "] "
+        self.output_text.configure(state=NORMAL)
         self.output_text.insert(tk.END, message_time.strftime("[%Y-%m-%d %H:%M:%S") + tz_short + message + "\n")
         self.output_text.yview(tk.END)  # Auto-scroll to the bottom
+        self.output_text.configure(state=DISABLED)
