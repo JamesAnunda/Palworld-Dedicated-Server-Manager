@@ -1,5 +1,5 @@
 from app import Application
-from app.tabs.main.sections import IntervalConfig, OptionalConfig, ServerFunctions, ServerInfo
+from app.tabs.main.sections import IntervalConfig, OptionalConfig, SaveConfigs, ServerFunctions, ServerInfo
 from app.utilities import TkViewElements
 from app.utilities.StateInterfaces import IRestorable, ISavable
 
@@ -15,6 +15,7 @@ class MainConfig(TkViewElements.TkTab, ISavable, IRestorable):
     optional_config: OptionalConfig = None
     server_info: ServerInfo = None
     server_functions: ServerFunctions = None
+    save_configs: SaveConfigs = None
 
     def __init__(self, application: 'Application.Application', tab_name: str = "Main"):
         super().__init__(application.get_tab_control(), tab_name, index=[0, 1])
@@ -26,13 +27,16 @@ class MainConfig(TkViewElements.TkTab, ISavable, IRestorable):
         self.optional_config: OptionalConfig = OptionalConfig.OptionalConfig(self, self.application.settings_handler)
         self.server_info: ServerInfo = ServerInfo.ServerInfo(self, self.application.settings_handler)
         self.server_functions: ServerFunctions = ServerFunctions.ServerFunctions(self)
+        self.save_configs: SaveConfigs = SaveConfigs.SaveConfigs(self, self.application.settings_handler)
 
     def save(self) -> None:
         self.interval_config.save()
         self.optional_config.save()
         self.server_info.save()
+        self.save_configs.save()
 
     def restore(self) -> None:
+        self.save_configs.restore()
         self.interval_config.restore()
         self.optional_config.restore()
         self.server_info.restore()

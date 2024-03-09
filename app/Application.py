@@ -1,4 +1,3 @@
-import json
 import os
 import tkinter as tk
 from tkinter import ttk
@@ -26,10 +25,6 @@ class Application(tk.Tk):
     def __init__(self, root_path):
         super().__init__()
         self.root_path: str = root_path
-        settings_directory: str = os.path.join(os.path.expanduser("~"), "Documents\\Palworld Server Manager")
-        if not os.path.exists(settings_directory):
-            os.makedirs(settings_directory)
-        self.settings_file: str = os.path.join(os.path.expanduser("~"), "Documents\\Palworld Server Manager", "settings.json")
         self.initial_setup()
         self.settings_handler: SettingsHandler = SettingsHandler()
         self.create_subcomponents()
@@ -40,10 +35,11 @@ class Application(tk.Tk):
             self.append_output("Icon wasn't able to load due to error: " + str(e))
         self.load_settings()
         Utilities.Utilities.set_application(self)
+        self.after(250, self.save())
 
     def initial_setup(self) -> None:
         self.tab_control: ttk.Notebook = ttk.Notebook(self)
-        self.title("Palworld Dedicated Server Manager")
+        self.title("PalWorld Dedicated Server Manager")
         self.tab_control.pack(expand=1, fill="both")
         self.protocol("WM_DELETE_WINDOW", self.on_exit)
 
@@ -64,8 +60,8 @@ class Application(tk.Tk):
         self.main_config.save()
         self.startup_config.save()
         self.alerts_config.save()
-        with open(self.settings_file, "w") as file:
-            json.dump(self.settings_handler.save(), file)
+        self.settings_handler.save()
+        self.after(5 * 1000, self.save)
 
     def on_exit(self) -> None:
         self.save()
@@ -73,16 +69,13 @@ class Application(tk.Tk):
 
     def load_settings(self) -> None:
         try:
-            with open(self.settings_file, "r") as file:
+            with open(self.settings_handler.full_save_path(), "r") as file:
                 self.settings_handler.restore(file)
-                self.main_config.restore()
-                self.startup_config.restore()
-                self.alerts_config.restore()
         except FileNotFoundError:
             self.append_output("First time startup or errored config file. Applying default configuration")
-            self.main_config.restore()
-            self.startup_config.restore()
-            self.alerts_config.restore()
+        self.main_config.restore()
+        self.startup_config.restore()
+        self.alerts_config.restore()
 
     def get_tab_control(self) -> ttk.Notebook:
         return self.tab_control

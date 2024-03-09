@@ -1,4 +1,5 @@
 import json
+import os
 from typing import TextIO
 
 
@@ -35,6 +36,9 @@ class SettingsHandler(dict):
         self.steamcmd_directory = SettingsItem("", "No Directory Selected")
         self.server_start_args = SettingsItem("", "-useperfthreads -NoAsyncLoadingThread -UseMultithreadForDS -EpicApp=PalServer")
 
+        self.settings_file = SettingsItem("", "settings.json")
+        self.settings_directory = SettingsItem("", os.path.join(os.path.expanduser("~"), "Documents\\Palworld Server Manager"))
+
         self.email_address = SettingsItem("", "")
         self.email_password = SettingsItem("", "")
         self.smtp_server = SettingsItem("", "smtp.gmail.com")
@@ -50,10 +54,21 @@ class SettingsHandler(dict):
     def __setattr__(self, key, value):
         self[key] = value
 
-    def save(self) -> dict[str, str]:
-        return dict((setting, self[setting].get()) for setting in self.keys() if self[setting] != self.email_password)
+    def save(self) -> None:
+        self.ensure_save_folder_exists()
+        settings = dict((setting, self[setting].get()) for setting in self.keys() if self[setting] != self.email_password)
+        save_file = os.path.join(self.settings_directory.get(), self.settings_file.get())
+        with open(save_file, "w") as file:
+            json.dump(settings, file)
 
     def restore(self, file: TextIO):
         settings = json.load(file)
         for setting in self.keys():
             self[setting].set(settings.get(setting))
+
+    def ensure_save_folder_exists(self):
+        if not os.path.exists(self.settings_directory.get()):
+            os.makedirs(self.settings_directory.get())
+
+    def full_save_path(self):
+        return os.path.join(self.settings_directory.get(), self.settings_file.get())
