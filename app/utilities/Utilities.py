@@ -67,7 +67,7 @@ class Utilities:
 
         current_time = datetime.datetime.now().replace(microsecond=0)
         message = "Dispatched: <t:" + str(int(time.mktime(current_time.timetuple()))) + "> (your local time)\n" + message
-        
+
         try:
             payload = {
                     "embeds": [{

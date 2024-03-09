@@ -27,6 +27,7 @@ class Application(tk.Tk):
         self.root_path: str = root_path
         self.initial_setup()
         self.settings_handler: SettingsHandler = SettingsHandler()
+        Utilities.Utilities.set_application(self)
         self.create_subcomponents()
 
         try:
@@ -34,7 +35,6 @@ class Application(tk.Tk):
         except Exception as e:
             self.append_output("Icon wasn't able to load due to error: " + str(e))
         self.load_settings()
-        Utilities.Utilities.set_application(self)
         self.after(250, self.save())
 
     def initial_setup(self) -> None:
@@ -53,7 +53,7 @@ class Application(tk.Tk):
     def initialize_commands(self):
         self.commands = Commands.Commands(self)
 
-    def save(self) -> None:
+    def save(self, one_off=False) -> None:
         """
         Gathers and writes the settings of all subordinate elements to the file
         """
@@ -61,7 +61,8 @@ class Application(tk.Tk):
         self.startup_config.save()
         self.alerts_config.save()
         self.settings_handler.save()
-        self.after(5 * 1000, self.save)
+        if not one_off:
+            self.after(5 * 1000, self.save)
 
     def on_exit(self) -> None:
         self.save()
@@ -69,7 +70,7 @@ class Application(tk.Tk):
 
     def load_settings(self) -> None:
         try:
-            with open(self.settings_handler.full_save_path(), "r") as file:
+            with open(self.settings_handler.settings_location.get(), "r") as file:
                 self.settings_handler.restore(file)
         except FileNotFoundError:
             self.append_output("First time startup or errored config file. Applying default configuration")

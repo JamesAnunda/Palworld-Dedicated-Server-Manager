@@ -1,0 +1,2 @@
+class PalServerHandler:
+    pass

@@ -15,43 +15,39 @@ class SaveConfigs(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         self.main_config: MainConfig = main_config
         self.settings_handler: SettingsHandler = settings_handler
 
-        self.settings_file = tk.StringVar()
-        self.settings_dir = tk.StringVar()
-        self.full_path = tk.StringVar()
+        self.settings_location = tk.StringVar()
+        self.formatted_path = tk.StringVar()
         row = 0
         ttk.Label(self, text="Save File Location: ").grid(column=0, row=row, sticky=tk.W)
-        ttk.Label(self, textvariable=self.full_path, width=50).grid(column=1, row=row, sticky=tk.W)
+        ttk.Label(self, textvariable=self.formatted_path, width=50).grid(column=1, row=row, sticky=tk.W)
 
         row += 1
-        ttk.Button(self, text="Set Location", command=self.set_file_location).grid(column=0, row=row, columnspan=2, sticky=tk.S)
+        ttk.Button(self, text="Set Location", command=self.set_file_location).grid(column=1, row=row, sticky=tk.W)
+        ttk.Button(self, text="Save Settings", command=lambda: self.main_config.application.save(one_off=True)).grid(column=0, row=row, sticky=tk.W)
 
     def save(self) -> None:
-        self.settings_handler.settings_file.set(self.settings_file.get())
-        self.settings_handler.settings_directory.set(self.settings_dir.get())
+        self.settings_handler.settings_location.set(self.settings_location.get())
 
     def restore(self) -> None:
-        self.settings_file.set(self.settings_handler.settings_file.get())
-        self.settings_dir.set(self.settings_handler.settings_directory.get())
-        self.process_full_path()
+        self.settings_location.set(self.settings_handler.settings_location.get())
+        self.format_path()
 
-    def process_full_path(self):
-        self.full_path.set(os.path.join(self.settings_dir.get(), self.settings_file.get()))
+    def format_path(self):
+        self.formatted_path.set(self.settings_location.get())
         max_len = 50
-        if len(self.full_path.get()) > max_len:
+        if len(self.formatted_path.get()) > max_len:
             temp = [""]
-            chunks = [chunk + '/' for chunk in self.full_path.get().split(os.path.sep)]
+            chunks = [chunk + '/' for chunk in self.formatted_path.get().split(os.path.sep)]
             chunks[-1] = chunks[-1].replace('/', "")
             for chunk in chunks:
                 if len(chunk) + len(temp[-1]) > max_len:
                     temp.append("")
                 temp[-1] = chunk if temp[-1] is None else temp[-1] + chunk
-            self.full_path.set('\n'.join(temp))
+            self.formatted_path.set('\n'.join(temp))
 
     def set_file_location(self):
         temp = tk.filedialog.askopenfilename()
         if temp is None or temp == "":
             return
-        temp = os.path.split(temp)
-        self.settings_dir.set(temp[0])
-        self.settings_file.set(temp[1])
-        self.process_full_path()
+        self.settings_location.set(temp)
+        self.format_path()
