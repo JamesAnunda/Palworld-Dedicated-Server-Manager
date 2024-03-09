@@ -1,4 +1,4 @@
-import os
+import os.path
 import tkinter as tk
 from tkinter import ttk
 from tkinter.filedialog import askopenfilename
@@ -17,25 +17,25 @@ class ServerConfigs(TkViewElements.TkLabelFrame, ISavable, IRestorable):
 
         row = 0
         self.palworld_dir = tk.StringVar(value=self.settings_handler.palworld_location.get())
-        self.create_dir_search("Select PalWorld Directory", self.palworld_dir, None, row)
+        self.create_dir_search("Select PalWorld Directory", self.palworld_dir, row)
         self.pal_status_label = tk.Label(self, text="Status Unknown", width=30)
         self.pal_status_label.grid(column=2, row=row, sticky=tk.E, padx=10, pady=10)
 
         row += 1
         self.arrcon_dir = tk.StringVar(value=self.settings_handler.arrcon_location.get())
-        self.create_dir_search("Select ARRCON Directory", self.arrcon_dir, None, row)
+        self.create_dir_search("Select ARRCON Directory", self.arrcon_dir, row)
         self.arrcon_status_label = tk.Label(self, text="Status Unknown", width=30)
         self.arrcon_status_label.grid(column=2, row=row, sticky=tk.E, padx=10, pady=10)
 
         row += 1
         self.steamcmd_dir = tk.StringVar(value=self.settings_handler.steamcmd_location.get())
-        self.create_dir_search("Select SteamCmd Directory", self.steamcmd_dir, None, row)
+        self.create_dir_search("Select SteamCmd Directory", self.steamcmd_dir, row)
         self.steamcmd_status_label = tk.Label(self, text="Status Unknown", width=30)
         self.steamcmd_status_label.grid(column=2, row=row, sticky=tk.E, padx=10, pady=10)
 
         row += 1
         self.backup_dir = tk.StringVar(value=self.settings_handler.backup_location.get())
-        self.create_dir_search("Select Backup Directory", self.backup_dir, None, 3)
+        self.create_dir_search("Select Backup Directory", self.backup_dir, 3, backup=True)
 
         row += 1
         self.server_start_args = tk.StringVar(value=self.settings_handler.server_start_args.get())
@@ -54,19 +54,32 @@ class ServerConfigs(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         self.arrcon_dir.set(self.settings_handler.arrcon_location.get())
         self.steamcmd_dir.set(self.settings_handler.steamcmd_location.get())
         self.backup_dir.set(self.settings_handler.backup_location.get())
+        self.update_statuses()
 
     def append_output(self, message) -> None:
         self.startup_configs.append_output(message)
 
-    def create_dir_search(self, btn_txt, dir_var, command, row) -> None:
-        ttk.Button(self, text=btn_txt, command=command, width=30).grid(column=0, row=row, sticky=tk.W, padx=10, pady=10)
+    def create_dir_search(self, btn_txt, dir_var, row, backup=False) -> None:
+        ttk.Button(self, text=btn_txt, command=lambda: self.get_directory(dir_var, backup), width=30).grid(column=0, row=row, sticky=tk.W, padx=10, pady=10)
         ttk.Label(self, textvariable=dir_var).grid(column=1, row=row, sticky=tk.W, padx=10, pady=10)
 
     def update_statuses(self) -> None:
-        pass
+        self.__update_status_helper(self.palworld_dir.get(), "PalServer.exe", self.pal_status_label)
+        self.__update_status_helper(self.arrcon_dir.get(), "ARRCON.exe", self.arrcon_status_label)
+        self.__update_status_helper(self.steamcmd_dir.get(), "steamcmd.exe", self.steamcmd_status_label)
 
-    def get_directory(self, ):
-        temp = tk.filedialog.askopenfilename()
+    def __update_status_helper(self, directory, exe, label):
+        if os.path.exists(directory) and os.path.exists(os.path.join(directory, exe)):
+            label.configure(text="Exe Found!", background="SystemButtonFace", foreground="green")
+            self.append_output(exe.title() + " found!")
+        else:
+            label.configure(text="Exe NOT Found...", background="black", foreground="red")
+            self.append_output(exe + " not found, please install and select the appropriate directory.")
+
+    def get_directory(self, var, backup=False):
+        temp = tk.filedialog.askopenfilename() if not backup else tk.filedialog.askdirectory()
         if temp is None or temp == "":
             return
-        temp = os.path.split(temp)
+        var.set(os.path.dirname(temp) if not os.path.isdir(temp) else temp)
+        self.startup_configs.application.save()
+        self.update_statuses()
