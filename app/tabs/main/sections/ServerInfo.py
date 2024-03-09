@@ -7,6 +7,7 @@ from app.handlers import SettingsHandler
 from app.tabs.main import MainConfig
 from app.utilities import TkViewElements
 from app.utilities.StateInterfaces import IRestorable, ISavable
+from app.utilities.Utilities import MessageLevel, Utilities
 
 
 class ServerInfo(TkViewElements.TkLabelFrame, ISavable, IRestorable):
@@ -18,7 +19,6 @@ class ServerInfo(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         self.settings_handler: SettingsHandler = settings_handler
 
         row = 0
-
         self.server_status_bool = tk.BooleanVar()
         self.server_status = tk.StringVar(value="?")
         ttk.Label(self, text="Server Status: ", anchor="w").grid(column=0, row=row, sticky=tk.W)
@@ -26,20 +26,17 @@ class ServerInfo(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         self.server_status_label.grid(column=1, row=row, sticky=tk.E)
 
         row += 1
-
         self.server_version = tk.StringVar(value="?")
         ttk.Label(self, text="Server Version: ", anchor="w").grid(column=0, row=row, sticky=tk.W)
         ttk.Label(self, textvariable=self.server_version, anchor="e").grid(column=1, row=row, sticky=tk.E)
 
         row += 1
-
         self.external_ip = tk.StringVar()
         ttk.Label(self, text="External IP: ", anchor="w").grid(column=0, row=row, sticky=tk.W)
         ttk.Label(self, textvariable=self.external_ip, width=16, anchor="e").grid(column=1, row=row, sticky=tk.E)
 
         row += 1
-
-        ttk.Button(self, text="Update Now", command=self.update_server_info).grid(column=0, row=row, columnspan=2, sticky=tk.S)
+        ttk.Button(self, text="Update Now", command=self.update_server_info).grid(column=1, row=row, sticky=tk.E)
 
     def save(self) -> None:
         self.settings_handler.external_ip.set(self.external_ip.get())
@@ -76,7 +73,8 @@ class ServerInfo(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         if ip_response != self.external_ip.get():
             self.append_output("External IP address change detected")
             self.external_ip.set(ip_response)
-            # todo - send discord message on change
+            Utilities.send_discord_message(f"The server IP has changed to {self.external_ip.get()}, please update your connections on next startup!",
+                                           MessageLevel.PLAYER_ACTION_REQUIRED)
 
     def update_server_info(self) -> None:
         self.update_server_status()

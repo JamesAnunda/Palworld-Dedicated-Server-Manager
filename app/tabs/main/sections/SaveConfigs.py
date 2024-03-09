@@ -52,6 +52,6 @@ class SaveConfigs(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         if temp is None or temp == "":
             return
         temp = os.path.split(temp)
-        self.settings_file.set(temp[1])
         self.settings_dir.set(temp[0])
+        self.settings_file.set(temp[1])
         self.process_full_path()

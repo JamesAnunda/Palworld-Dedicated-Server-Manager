@@ -41,10 +41,10 @@ class OptionalConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         ttk.Label(self, text="Backup Server during Restarts").grid(column=1, row=row, sticky=tk.W)
 
         row += 1
-        self.delete_old_backups = tk.BooleanVar(value=False)
+        self.delete_old_backups_bool = tk.BooleanVar(value=False)
         self.delete_old_backups_days = tk.StringVar()
-        ttk.Checkbutton(self, variable=self.delete_old_backups, command=None).grid(column=0, row=row, sticky=tk.W)  # todo enable_delete_backups
-        ttk.Label(self, text="Backup Server during Restarts").grid(column=1, row=row, sticky=tk.W)
+        ttk.Checkbutton(self, variable=self.delete_old_backups_bool, command=None).grid(column=0, row=row, sticky=tk.W)  # todo enable_delete_backups
+        ttk.Label(self, text="Delete Old Backups").grid(column=1, row=row, sticky=tk.W)
         ttk.Entry(self, textvariable=self.delete_old_backups_days, width=3, validate="key", validatecommand=(self.register(numeric_validate), '%P', '%d', 1, 365)).grid(column=2, row=row, sticky=tk.W)
 
     def save(self) -> None:
@@ -55,3 +55,18 @@ class OptionalConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
 
     def append_output(self, message) -> None:
         self.main_config.append_output(message)
+
+    def email_notification_enabled(self):
+        return self.send_email_bool.get()
+
+    def discord_notification_enabled(self):
+        return self.send_discord_bool.get()
+
+    def startup_update_check_enabled(self):
+        return self.check_update_startup_bool.get()
+
+    def backup_during_restart_enabled(self):
+        return self.backup_restart_bool.get()
+
+    def delete_old_backups_enabled(self):
+        return self.delete_old_backups_bool.get()

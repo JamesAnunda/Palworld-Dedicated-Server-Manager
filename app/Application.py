@@ -82,3 +82,30 @@ class Application(tk.Tk):
 
     def append_output(self, message) -> None:
         self.output_console.append_output(message)
+
+    def interval_restart_enabled(self):
+        return self.main_config.interval_restart_enabled()
+
+    def daily_restart_enabled(self):
+        return self.main_config.daily_restart_enabled()
+
+    def monitor_interval_enabled(self):
+        return self.main_config.monitor_interval_enabled()
+
+    def backup_interval_enabled(self):
+        return self.main_config.backup_interval_enabled()
+
+    def email_notification_enabled(self):
+        return self.main_config.email_notification_enabled()
+
+    def discord_notification_enabled(self):
+        return self.main_config.discord_notification_enabled()
+
+    def startup_update_check_enabled(self):
+        return self.main_config.startup_update_check_enabled()
+
+    def backup_during_restart_enabled(self):
+        return self.main_config.backup_during_restart_enabled()
+
+    def delete_old_backups_enabled(self):
+        return self.main_config.delete_old_backups_enabled()

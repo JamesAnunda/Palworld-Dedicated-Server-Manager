@@ -108,3 +108,15 @@ class IntervalConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         self.time_window.destroy()
         self.time_window.update()
         self.time_window = None
+
+    def interval_restart_enabled(self):
+        return self.interval_restart_bool.get()
+
+    def daily_restart_enabled(self):
+        return self.daily_restart_bool.get()
+
+    def monitor_interval_enabled(self):
+        return self.monitor_interval_bool.get()
+
+    def backup_interval_enabled(self):
+        return self.backup_interval_bool.get()

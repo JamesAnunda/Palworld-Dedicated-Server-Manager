@@ -44,3 +44,30 @@ class MainConfig(TkViewElements.TkTab, ISavable, IRestorable):
 
     def append_output(self, message) -> None:
         self.application.append_output(message)
+
+    def interval_restart_enabled(self):
+        return self.interval_config.interval_restart_enabled()
+
+    def daily_restart_enabled(self):
+        return self.interval_config.daily_restart_enabled()
+
+    def monitor_interval_enabled(self):
+        return self.interval_config.monitor_interval_enabled()
+
+    def backup_interval_enabled(self):
+        return self.interval_config.backup_interval_enabled()
+
+    def email_notification_enabled(self):
+        return self.optional_config.email_notification_enabled()
+
+    def discord_notification_enabled(self):
+        return self.optional_config.discord_notification_enabled()
+
+    def startup_update_check_enabled(self):
+        return self.optional_config.startup_update_check_enabled()
+
+    def backup_during_restart_enabled(self):
+        return self.optional_config.backup_during_restart_enabled()
+
+    def delete_old_backups_enabled(self):
+        return self.optional_config.delete_old_backups_enabled()
