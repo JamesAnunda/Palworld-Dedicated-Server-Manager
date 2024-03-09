@@ -56,15 +56,18 @@ class Utilities:
         webbrowser.open("https://support.google.com/accounts/answer/185833")
 
     @classmethod
-    def send_discord_message(cls, message, message_level: MessageLevel) -> MessageResponse:
+    def send_discord_message(cls, message, message_level: MessageLevel, test=False) -> MessageResponse:
+        if not test and not cls.application.discord_notification_enabled():
+            return MessageResponse(False, MessageLevel.INFO, "Discord Notification not Enabled")
         if message is None or message == '':
             return MessageResponse(False, MessageLevel.ERROR, "Discord Webhook message is invalid")
-        current_time = datetime.datetime.now().replace(microsecond=0)
-        message = "Dispatched: <t:" + str(int(time.mktime(current_time.timetuple()))) + "> (your local time)\n" + message
         discord_webhook = cls.application.settings_handler.discord_webhook.get()
         if discord_webhook is None or discord_webhook == '':  # todo: further validation?
             return MessageResponse(False, MessageLevel.ADMIN_ACTION_REQUIRED, "Discord Webhook is invalid")
 
+        current_time = datetime.datetime.now().replace(microsecond=0)
+        message = "Dispatched: <t:" + str(int(time.mktime(current_time.timetuple()))) + "> (your local time)\n" + message
+        
         try:
             payload = {
                     "embeds": [{
@@ -83,15 +86,17 @@ class Utilities:
 
     @classmethod
     def send_test_discord_message(cls) -> MessageResponse:
-        cls.send_discord_message("This is a test ALL_CLEAR message, **please ignore me**! There's nothing to worry about!", MessageLevel.ALL_CLEAR)
-        cls.send_discord_message("This is a test INFO message, **please ignore me**! There's nothing to worry about!", MessageLevel.INFO)
-        cls.send_discord_message("This is a test PLAYER ACTION REQUIRED message, **please ignore me**! There's nothing to worry about!", MessageLevel.PLAYER_ACTION_REQUIRED)
-        cls.send_discord_message("This is a test ADMIN ACTION REQUIRED message, **please ignore me**! There's nothing to worry about!", MessageLevel.ADMIN_ACTION_REQUIRED)
-        cls.send_discord_message("This is a test WARNING message, **please ignore me**! There's nothing to worry about!", MessageLevel.WARNING)
-        return cls.send_discord_message("This is a test ERROR message, **please ignore me**! There's nothing to worry about!", MessageLevel.ERROR)
+        cls.send_discord_message("This is a test ALL_CLEAR message, **please ignore me**! There's nothing to worry about!", MessageLevel.ALL_CLEAR, test=True)
+        cls.send_discord_message("This is a test INFO message, **please ignore me**! There's nothing to worry about!", MessageLevel.INFO, test=True)
+        cls.send_discord_message("This is a test PLAYER ACTION REQUIRED message, **please ignore me**! There's nothing to worry about!", MessageLevel.PLAYER_ACTION_REQUIRED, test=True)
+        cls.send_discord_message("This is a test ADMIN ACTION REQUIRED message, **please ignore me**! There's nothing to worry about!", MessageLevel.ADMIN_ACTION_REQUIRED, test=True)
+        cls.send_discord_message("This is a test WARNING message, **please ignore me**! There's nothing to worry about!", MessageLevel.WARNING, test=True)
+        return cls.send_discord_message("This is a test ERROR message, **please ignore me**! There's nothing to worry about!", MessageLevel.ERROR, test=True)
 
     @classmethod
-    def send_email(cls, message, message_level: MessageLevel) -> MessageResponse:
+    def send_email(cls, message, message_level: MessageLevel, test=False) -> MessageResponse:
+        if not test and not cls.application.email_notification_enabled():
+            return MessageResponse(False, MessageLevel.INFO, "Email Notification not Enabled")
         email_address = cls.application.settings_handler.email_address.get()
         smtp_server = cls.application.settings_handler.smtp_server.get()
         smtp_port = cls.application.settings_handler.smtp_port.get()
@@ -127,7 +132,7 @@ class Utilities:
 
     @classmethod
     def send_test_email(cls) -> MessageResponse:
-        return cls.send_email("Test Email", MessageLevel.INFO)
+        return cls.send_email("Test Email", MessageLevel.INFO, test=True)
 
 
 def is_empty_or_none(tests: list[str]):

@@ -32,5 +32,4 @@ class DiscordConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         self.save()
         response: MessageResponse = Utilities.send_test_discord_message()
         if not response.success:
-            print(response.message_level)
             messagebox.showerror(title="Test Discord Message Error", message=response.message_level.name.upper() + ": " + response.response)
