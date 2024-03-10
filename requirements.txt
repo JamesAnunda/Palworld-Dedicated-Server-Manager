@@ -1,0 +1,6 @@
+certifi==2024.2.2
+charset-normalizer==3.3.2
+idna==3.6
+requests==2.31.0
+tkTimePicker @ git+https://github.com/Abaddon16/tkTimePicker.git@fabce5f0cd24bb399d1f101d3db7296a22bd787a
+urllib3==2.2.1

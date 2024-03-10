@@ -1,0 +1,9 @@
+.idea/**
+build/**
+dist/**
+output/**
+venv/**
+*.pyc
+
+TODO.txt
+*.spec
