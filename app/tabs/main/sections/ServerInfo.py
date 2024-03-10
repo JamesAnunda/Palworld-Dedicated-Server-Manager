@@ -75,6 +75,10 @@ class ServerInfo(TkViewElements.TkLabelFrame, ISavable, IRestorable):
             self.external_ip.set(ip_response)
             Utilities.send_discord_message(f"The server IP has changed to {self.external_ip.get()}, please update your connections on next startup!",
                                            MessageLevel.PLAYER_ACTION_REQUIRED)
+            # todo does ip roll cause issues during runtime?
+            # close server
+            # update ini w/ new ip
+            # restart server
 
     def update_server_info(self) -> None:
         self.update_server_status()

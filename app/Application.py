@@ -65,7 +65,7 @@ class Application(tk.Tk):
             self.after(5 * 1000, self.save)
 
     def on_exit(self) -> None:
-        self.save()
+        self.save(one_off=True)
         self.destroy()
 
     def load_settings(self) -> None:

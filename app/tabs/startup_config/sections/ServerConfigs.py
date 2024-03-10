@@ -81,5 +81,5 @@ class ServerConfigs(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         if temp is None or temp == "":
             return
         var.set(os.path.dirname(temp) if not os.path.isdir(temp) else temp)
-        self.startup_configs.application.save()
+        self.startup_configs.application.save(one_off=True)
         self.update_statuses()

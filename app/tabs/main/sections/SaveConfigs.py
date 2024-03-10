@@ -23,10 +23,14 @@ class SaveConfigs(TkViewElements.TkLabelFrame, ISavable, IRestorable):
 
         row += 1
         ttk.Button(self, text="Set Location", command=self.set_file_location).grid(column=1, row=row, sticky=tk.W)
-        ttk.Button(self, text="Save Settings", command=lambda: self.main_config.application.save(one_off=True)).grid(column=0, row=row, sticky=tk.W)
+        ttk.Button(self, text="Save Settings", command=self.save_all).grid(column=0, row=row, sticky=tk.W)
 
     def save(self) -> None:
         self.settings_handler.settings_location.set(self.settings_location.get())
+
+    def save_all(self):
+        self.main_config.append_output("Settings Saved!")
+        self.main_config.application.save(one_off=True)
 
     def restore(self) -> None:
         self.settings_location.set(self.settings_handler.settings_location.get())
