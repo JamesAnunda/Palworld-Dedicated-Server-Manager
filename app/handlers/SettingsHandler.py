@@ -36,6 +36,9 @@ class SettingsHandler(dict):
         self.steamcmd_location = SettingsItem("", "No Directory Selected")
         self.server_start_args = SettingsItem("", "-useperfthreads -NoAsyncLoadingThread -UseMultithreadForDS -EpicApp=PalServer")
 
+        self.rcon_port = SettingsItem("", "")
+        self.rcon_pass = SettingsItem("", "")
+
         self.settings_location = SettingsItem("", os.path.join(os.path.expanduser("~"), "Documents\\Palworld Server Manager", "settings.json"))
         self.email_address = SettingsItem("", "")
         self.email_password = SettingsItem("", "")

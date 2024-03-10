@@ -25,6 +25,7 @@ class StartupConfigs(TkViewElements.TkTab, ISavable, IRestorable):
 
     def save(self) -> None:
         self.server_configs.save()
+        self.world_settings.save()
 
     def restore(self) -> None:
         self.world_settings.restore()

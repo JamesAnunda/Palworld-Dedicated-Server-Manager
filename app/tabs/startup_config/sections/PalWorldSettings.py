@@ -38,6 +38,10 @@ class PalWorldSettings(TkViewElements.TkLabelFrame, IRestorable):
 
         ttk.Button(self, text="Edit PalWorldSettings.ini", command=self.open_palworld_settings).grid(column=0, row=6, columnspan=3, padx=10, pady=10)
 
+    def save(self) -> None:
+        self.settings_handler.rcon_port.set(self.rcon_port.get())
+        self.settings_handler.rcon_pass.set(self.rcon_pass.get())
+
     def restore(self) -> None:
         self.update_settings()
 
