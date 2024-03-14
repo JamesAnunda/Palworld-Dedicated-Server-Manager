@@ -11,16 +11,17 @@ def compile_to_exe():
         --distpath "./ouput" --workpath "./build" ./Driver.py"
     """
     PyInstaller.__main__.run([
-            '--clean', '--noconfirm',
-            '--onefile', '--windowed',
-            '--icon=palworld_logo.ico',
-            '--name=PalWorldServerManager',
-            '--add-data=version.txt;.',
-            '--add-data=palworld_logo.ico;.',
-            '--distpath=output',
-            '--workpath=build',
-            'Driver.py'
+        '--clean', '--noconfirm',
+        '--onefile', '--windowed',
+        '--icon=palworld_logo.ico',
+        '--name=PalWorldServerManager',
+        '--add-data=version.txt;.',
+        '--add-data=palworld_logo.ico;.',
+        '--distpath=output',
+        '--workpath=build',
+        'Driver.py'
     ])
+
 
 def rmdir(directory):
     directory = Path(directory)
