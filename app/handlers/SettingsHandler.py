@@ -56,7 +56,7 @@ class SettingsHandler(dict):
         self[key] = value
 
     def save(self) -> None:
-        self.ensure_save_folder_exists()
+        os.makedirs(os.path.split(self.settings_location.get())[0], exist_ok=True)
         settings = dict((setting, self[setting].get()) for setting in self.keys() if self[setting] != self.email_password)
         with open(self.settings_location.get(), "w") as file:
             json.dump(settings, file, indent=4, sort_keys=True)
@@ -65,8 +65,3 @@ class SettingsHandler(dict):
         settings = json.load(file)
         for setting in self.keys():
             self[setting].set(settings.get(setting))
-
-    def ensure_save_folder_exists(self):
-        if os.path.exists(self.settings_location.get()):
-            return
-        os.makedirs(os.path.basename(self.settings_location.get()))

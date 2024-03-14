@@ -24,7 +24,10 @@ class OutputConsole(tk.Frame):
     def append_output(self, message) -> None:
         message_time = datetime.now().astimezone()
         timezone = message_time.tzname().split(" ")
-        tz_short = "] " if type(timezone) is not list else " " + timezone[0] + "/" + timezone[1][0] + timezone[2][0] + timezone[3][0] + "] "
+        if len(timezone) > 3:
+            tz_short = "] " if type(timezone) is not list else " " + timezone[0] + "/" + timezone[1][0] + timezone[2][0] + timezone[3][0] + "] "
+        else:
+            tz_short = "] " if type(timezone) is not list else " " + timezone[0][0] + timezone[1][0] + timezone[2][0] + "] "
         self.output_text.configure(state=NORMAL)
         self.output_text.insert(tk.END, message_time.strftime("[%Y-%m-%d %H:%M:%S") + tz_short + message + "\n")
         self.output_text.yview(tk.END)  # Auto-scroll to the bottom

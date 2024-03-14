@@ -43,7 +43,7 @@ class PalWorldSettings(TkViewElements.TkLabelFrame, IRestorable):
         self.settings_handler.rcon_pass.set(self.rcon_pass.get())
 
     def restore(self) -> None:
-        self.update_settings()
+        self.update_settings(startup=True)
 
     def append_output(self, message) -> None:
         self.startup_configs.append_output(message)
@@ -64,15 +64,15 @@ class PalWorldSettings(TkViewElements.TkLabelFrame, IRestorable):
         self.server_pass_label.config(text="-")
         self.server_port.set("-")
 
-    def update_settings(self) -> None:
+    def update_settings(self, startup=False) -> None:
         directory = self.startup_configs.application.settings_handler.palworld_location.get()
         if directory == self.startup_configs.application.settings_handler.palworld_location.get_default():
             self.reset_server_info()
-            return self.invalid_directory()
+            return None if startup else self.invalid_directory()
         file_path = os.path.join(directory, 'Pal', 'Saved', 'Config', 'WindowsServer', 'PalWorldSettings.ini')
         if not os.path.exists(file_path) or not os.path.isfile(file_path):
             self.reset_server_info()
-            return self.invalid_directory()
+            return None if startup else self.invalid_directory()
 
         with open(file_path, 'r') as file:
             file_content = file.read()
