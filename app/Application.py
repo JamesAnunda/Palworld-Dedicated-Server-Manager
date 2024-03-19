@@ -24,18 +24,19 @@ class Application(tk.Tk):
 
     def __init__(self, root_path):
         super().__init__()
+        ttk.Style().theme_use("vista")
         self.root_path: str = root_path
+        Utilities.Utilities.set_application(self)
         self.initial_setup()
         self.settings_handler: SettingsHandler = SettingsHandler()
-        Utilities.Utilities.set_application(self)
-        self.create_subcomponents()
         self.commands = Commands.Commands(self)
+        self.create_subcomponents()
+        self.load_settings()
 
         try:
             self.iconbitmap(os.path.join(self.root_path, 'palworld_logo.ico'))
         except Exception as e:
             self.append_output("Icon wasn't able to load due to error: " + str(e))
-        self.load_settings()
         self.after(250, self.save())
 
     def initial_setup(self) -> None:
@@ -50,9 +51,6 @@ class Application(tk.Tk):
         self.startup_config: StartupConfigs = StartupConfigs.StartupConfigs(self)
         self.alerts_config: AlertsConfig = AlertsConfig.AlertsConfig(self)
         self.about: About = About.About(self)
-
-    def update_commands(self):
-        self.commands.update_commands()
 
     def save(self, one_off=False) -> None:
         """

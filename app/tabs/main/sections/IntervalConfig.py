@@ -66,15 +66,23 @@ class IntervalConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
 
     def save(self) -> None:
         self.settings_handler.interval_restart_hours.set(self.interval_restart_hours.get())
+        self.settings_handler.interval_restart_enabled.set(self.interval_restart_bool.get())
         self.settings_handler.daily_restart_time.set(self.daily_restart_time.get())
+        self.settings_handler.daily_restart_enabled.set(self.daily_restart_bool.get())
         self.settings_handler.monitor_interval_minutes.set(self.monitor_interval_minutes.get())
+        self.settings_handler.monitor_interval_enabled.set(self.monitor_interval_bool.get())
         self.settings_handler.backup_interval_hours.set(self.backup_interval_hours.get())
+        self.settings_handler.backup_interval_enabled.set(self.backup_interval_bool.get())
 
     def restore(self) -> None:
         self.interval_restart_hours.set(self.settings_handler.interval_restart_hours.get())
+        self.interval_restart_bool.set(self.settings_handler.interval_restart_enabled.get())
         self.daily_restart_time.set(self.settings_handler.daily_restart_time.get())
+        self.daily_restart_bool.set(self.settings_handler.daily_restart_enabled.get())
         self.monitor_interval_minutes.set(self.settings_handler.monitor_interval_minutes.get())
+        self.monitor_interval_bool.set(self.settings_handler.monitor_interval_enabled.get())
         self.backup_interval_hours.set(self.settings_handler.backup_interval_hours.get())
+        self.backup_interval_bool.set(self.settings_handler.backup_interval_enabled.get())
 
     def append_output(self, message) -> None:
         self.main_config.append_output(message)

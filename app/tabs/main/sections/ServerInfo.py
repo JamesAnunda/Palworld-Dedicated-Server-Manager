@@ -1,3 +1,4 @@
+import threading
 import tkinter as tk
 from tkinter import ttk
 
@@ -78,15 +79,19 @@ class ServerInfo(TkViewElements.TkLabelFrame, ISavable, IRestorable):
             # todo does ip roll cause issues during runtime?
             # close server
             # update ini w/ new ip
-            # restart server
+            # restart server?
 
     def update_server_info(self) -> None:
-        self.update_server_status()
-        self.update_server_version()
-        self.update_external_ip()
-        self.update_server_status_label()
+        def refresh():
+            self.update_server_status()
+            self.update_server_version()
+            self.update_external_ip()
+            self.update_server_status_label()
+
         self.update_after_id = self.after_cancel(self.update_after_id) if self.update_after_id is not None else None
-        self.update_after_id = self.after(1000, lambda: self.update_server_info())
+        self.update_after_id = self.main_config.application.after(1000, self.update_server_info)
+        threading.Thread(target=refresh, daemon=True).start()
+        print(threading.enumerate())
 
     def append_output(self, message) -> None:
         self.main_config.append_output(message)

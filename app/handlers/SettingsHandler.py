@@ -20,14 +20,29 @@ class SettingsItem:
     def get_default(self) -> str:
         return self.__default_value
 
+    def is_default(self) -> bool:
+        return self.get() == self.__default_value
+
+
 class SettingsHandler(dict):
     def __init__(self):
         super().__init__()
         self.interval_restart_hours = SettingsItem("", "")
+        self.interval_restart_enabled = SettingsItem(False, False)
         self.daily_restart_time = SettingsItem("", "12:00 AM")
+        self.daily_restart_enabled = SettingsItem(False, False)
         self.monitor_interval_minutes = SettingsItem("", "")
+        self.monitor_interval_enabled = SettingsItem(False, False)
         self.backup_interval_hours = SettingsItem("", "")
+        self.backup_interval_enabled = SettingsItem(False, False)
+
+        self.send_email_on_crash_enabled = SettingsItem(False, False)
+        self.send_discord_on_crash_enabled = SettingsItem(False, False)
+        self.check_update_on_start_enabled = SettingsItem(False, False)
+        self.backup_on_restart_enabled = SettingsItem(False, False)
         self.delete_old_backups_days = SettingsItem("", "")
+        self.delete_old_backups_enabled = SettingsItem(False, False)
+
         self.external_ip = SettingsItem("", "127.0.0.1")
 
         self.arrcon_location = SettingsItem("", "No Directory Selected")

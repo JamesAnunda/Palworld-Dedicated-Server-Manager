@@ -102,9 +102,9 @@ class PalWorldSettings(TkViewElements.TkLabelFrame, IRestorable):
                 self.server_pass_label.config(text="No Password Set" if server_pass == "" else "****")
 
     def open_palworld_settings(self) -> None:
-        directory = self.startup_configs.application.settings_handler.palworld_location.get()
-        if directory == self.startup_configs.application.settings_handler.palworld_location.get_default():
+        if self.startup_configs.application.settings_handler.palworld_location.is_default():
             return self.invalid_directory()
+        directory = self.startup_configs.application.settings_handler.palworld_location.get()
         ini_file_path = os.path.join(directory, 'Pal', 'Saved', 'Config', 'WindowsServer', 'PalWorldSettings.ini')
         if not os.path.exists(ini_file_path) or not os.path.isfile(ini_file_path):
             return self.invalid_directory()
@@ -123,6 +123,7 @@ class PalWorldSettings(TkViewElements.TkLabelFrame, IRestorable):
     def invalid_directory(self):
         self.append_output("You need to select a valid directory first.")
         messagebox.showinfo("Invalid Directory", "You need to select a valid directory first")
+
 
 def popen_and_call(on_exit, popen_args, shell):
     """

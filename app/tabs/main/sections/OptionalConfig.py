@@ -48,6 +48,11 @@ class OptionalConfig(TkViewElements.TkLabelFrame, ISavable, IRestorable):
         ttk.Entry(self, textvariable=self.delete_old_backups_days, width=3, validate="key", validatecommand=(self.register(numeric_validate), '%P', '%d', 1, 365)).grid(column=2, row=row, sticky=tk.W)
 
     def save(self) -> None:
+        self.settings_handler.send_email_on_crash_enabled.set(self.send_email_bool.get())
+        self.settings_handler.send_discord_on_crash_enabled.set(self.send_discord_bool.get())
+        self.settings_handler.check_update_on_start_enabled.set(self.check_update_startup_bool.get())
+        self.settings_handler.backup_on_restart_enabled.set(self.backup_restart_bool.get())
+        self.settings_handler.delete_old_backups_enabled.set(self.delete_old_backups_bool.get())
         self.settings_handler.delete_old_backups_days.set(self.delete_old_backups_days.get())
 
     def restore(self) -> None:
